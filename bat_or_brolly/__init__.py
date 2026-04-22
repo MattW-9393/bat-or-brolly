@@ -7,8 +7,17 @@ def create_app(test_config=None):
     app = Flask(__name__, instance_relative_config=True)
 
     # a simple page that says hello
-    @app.route('/hello')
+    @app.route('/')
+    def index():
+        return 'This is the home page'
+
+    @app.route('/bat-or-brolly')
     def hello():
-        return 'Hello, World!'
+        return 'This is the app'
+
+    @app.route('/docs')
+    def docs():
+        return 'The docs are here'
+
 
     return app
