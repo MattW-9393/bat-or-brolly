@@ -15,11 +15,9 @@
   <nav>
     <a class="nav-logo" href="#"><span>Bat</span> or Brolly</a>
     <ul class="nav-links">
-      <li><a href="#">Home</a></li>
-      <li><a href="#app">App</a></li>
-      <li><a href="#docs">Docs</a></li>
-      <li><a href="#about">About &amp; Contact</a></li>
-      <li><a href="#app" class="nav-cta">Check conditions</a></li>
+      {% for item in nav_links %}
+      <li><a href="{{ item.href }}" class="{{item.class}}">{{ item.caption }}</a></li>
+      {% endfor %}
     </ul>
   </nav>
 
@@ -34,8 +32,9 @@
         Real-time weather analysis built for cricketers. Know before you go whether conditions are fit for play — or whether the covers are going on.
       </p>
       <div class="hero-actions">
-        <a href="#app" class="btn-primary">Check my ground</a>
-        <a href="#docs" class="btn-ghost">
+        {% for item in hero-actions %}
+        <a href="{{ /bat_or_brolly }}" class="btn-primary">Check my ground</a>
+        <a href="#{{ /docs }}" class="btn-ghost">
           Read the docs
           <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
             <path d="M3 7h8M7 3l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>

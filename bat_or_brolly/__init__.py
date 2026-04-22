@@ -10,9 +10,14 @@ def create_app(test_config=None):
     # a simple page that says hello
     @app.route('/')
     def index():
-        return render_template('index.html')
+        return render_template('index.html', nav_links=[
+            {"href": '/', 'caption': 'Home'},
+            {'href': '/docs', 'caption': 'docs'},
+            {'href': '/about', 'caption': 'About & Contact Us'},
+            {'href': '/bat_or_brolly', 'class': 'nav-cta', 'caption': 'Check conditions'}
+        ])
 
-    @app.route('/bat-or-brolly')
+    @app.route('/bat_or_brolly')
     def hello():
         return 'This is the app'
 
@@ -20,5 +25,8 @@ def create_app(test_config=None):
     def docs():
         return 'The docs are here'
 
+    @app.route('/about')
+    def about():
+        return 'here is info, contact me here'
 
     return app
