@@ -1,5 +1,6 @@
 import os
 from flask import Flask
+from flask import render_template
 
 
 def create_app(test_config=None):
@@ -9,7 +10,7 @@ def create_app(test_config=None):
     # a simple page that says hello
     @app.route('/')
     def index():
-        return 'This is the home page'
+        return render_template('index.html')
 
     @app.route('/bat-or-brolly')
     def hello():

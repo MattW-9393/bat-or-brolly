@@ -1,0 +1,810 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bat or Brolly</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --cream: #f5f0e8;
+      --ink: #1a1a18;
+      --grass: #2d5a1b;
+      --grass-light: #4a8c2a;
+      --sky: #7db8d4;
+      --cloud: #e8e4dc;
+      --accent: #c8432a;
+      --gold: #c9962a;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--cream);
+      color: var(--ink);
+      overflow-x: hidden;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.25rem 3rem;
+      background: rgba(245, 240, 232, 0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(26,26,24,0.08);
+    }
+
+    .nav-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.25rem;
+      font-weight: 900;
+      color: var(--ink);
+      text-decoration: none;
+      letter-spacing: -0.02em;
+    }
+
+    .nav-logo span { color: var(--grass); }
+
+    .nav-links {
+      display: flex;
+      gap: 2.5rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--ink);
+      text-decoration: none;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      position: relative;
+      opacity: 0.7;
+      transition: opacity 0.2s;
+    }
+
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: -3px; left: 0;
+      width: 0; height: 1.5px;
+      background: var(--grass);
+      transition: width 0.25s ease;
+    }
+
+    .nav-links a:hover { opacity: 1; }
+    .nav-links a:hover::after { width: 100%; }
+
+    .nav-cta {
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--cream) !important;
+      background: var(--grass);
+      padding: 0.5rem 1.25rem;
+      border-radius: 2px;
+      text-transform: uppercase !important;
+      letter-spacing: 0.06em !important;
+      opacity: 1 !important;
+      transition: background 0.2s !important;
+    }
+
+    .nav-cta::after { display: none !important; }
+    .nav-cta:hover { background: var(--grass-light) !important; }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      padding-top: 5rem;
+      overflow: hidden;
+    }
+
+    .hero-left {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 5rem 3rem 5rem 4rem;
+      position: relative;
+      z-index: 2;
+    }
+
+    .hero-eyebrow {
+      font-size: 0.75rem;
+      font-weight: 500;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--grass);
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .hero-eyebrow::before {
+      content: '';
+      display: block;
+      width: 2rem;
+      height: 1.5px;
+      background: var(--grass);
+    }
+
+    .hero-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(3.5rem, 6vw, 5.5rem);
+      font-weight: 900;
+      line-height: 1.0;
+      letter-spacing: -0.03em;
+      margin-bottom: 1.75rem;
+      color: var(--ink);
+    }
+
+    .hero-title em {
+      font-style: italic;
+      color: var(--grass);
+    }
+
+    .hero-subtitle {
+      font-size: 1.1rem;
+      font-weight: 300;
+      line-height: 1.7;
+      color: rgba(26,26,24,0.65);
+      max-width: 38ch;
+      margin-bottom: 3rem;
+    }
+
+    .hero-actions {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+    }
+
+    .btn-primary {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.875rem;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--cream);
+      background: var(--ink);
+      padding: 0.9rem 2rem;
+      border-radius: 2px;
+      text-decoration: none;
+      transition: background 0.2s, transform 0.15s;
+    }
+
+    .btn-primary:hover {
+      background: var(--grass);
+      transform: translateY(-1px);
+    }
+
+    .btn-ghost {
+      font-size: 0.875rem;
+      font-weight: 400;
+      color: var(--ink);
+      text-decoration: none;
+      opacity: 0.6;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      transition: opacity 0.2s;
+    }
+
+    .btn-ghost:hover { opacity: 1; }
+
+    .btn-ghost svg {
+      transition: transform 0.2s;
+    }
+
+    .btn-ghost:hover svg { transform: translateX(3px); }
+
+    /* ── HERO RIGHT (pitch illustration) ── */
+    .hero-right {
+      position: relative;
+      overflow: hidden;
+      background: var(--sky);
+    }
+
+    .sky-bg {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(175deg, #a8d4e8 0%, #d4eaf5 40%, #e8f4f8 70%, #c8dcc4 100%);
+    }
+
+    .cloud-group {
+      position: absolute;
+      top: 12%;
+      animation: drift 18s ease-in-out infinite alternate;
+    }
+
+    .cloud-group:nth-child(2) {
+      top: 28%;
+      animation-duration: 24s;
+      animation-delay: -8s;
+      opacity: 0.7;
+      transform: scale(0.7);
+    }
+
+    @keyframes drift {
+      from { transform: translateX(-5%); }
+      to   { transform: translateX(5%); }
+    }
+
+    .cloud {
+      position: relative;
+    }
+
+    .cloud-shape {
+      width: 180px;
+      height: 60px;
+      background: white;
+      border-radius: 50px;
+      opacity: 0.85;
+      position: relative;
+      left: 60px;
+    }
+
+    .cloud-shape::before, .cloud-shape::after {
+      content: '';
+      position: absolute;
+      background: white;
+      border-radius: 50%;
+    }
+
+    .cloud-shape::before {
+      width: 80px; height: 80px;
+      top: -40px; left: 20px;
+    }
+
+    .cloud-shape::after {
+      width: 60px; height: 60px;
+      top: -28px; left: 80px;
+    }
+
+    /* pitch */
+    .pitch-container {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 55%;
+    }
+
+    .outfield {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, #3a7a20 0%, #2d6018 100%);
+    }
+
+    /* mow stripes */
+    .outfield::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(
+        180deg,
+        rgba(255,255,255,0.06) 0px,
+        rgba(255,255,255,0.06) 30px,
+        transparent 30px,
+        transparent 60px
+      );
+    }
+
+    .pitch-strip {
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80px;
+      height: 100%;
+      background: linear-gradient(180deg, #c8b87a 0%, #d4c484 50%, #c0aa6a 100%);
+      border-left: 1px solid rgba(180,160,80,0.5);
+      border-right: 1px solid rgba(180,160,80,0.5);
+    }
+
+    /* crease lines */
+    .pitch-strip::before, .pitch-strip::after {
+      content: '';
+      position: absolute;
+      left: -10px; right: -10px;
+      height: 2px;
+      background: rgba(255,255,255,0.8);
+    }
+
+    .pitch-strip::before { top: 18%; }
+    .pitch-strip::after  { bottom: 18%; }
+
+    /* stumps */
+    .stumps {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 5px;
+    }
+
+    .stumps-top { top: 16%; }
+    .stumps-bottom { bottom: 16%; }
+
+    .stump {
+      width: 4px;
+      height: 28px;
+      background: #f0e8cc;
+      border-radius: 1px 1px 0 0;
+    }
+
+    .bail {
+      position: absolute;
+      top: -4px;
+      left: -2px;
+      right: -2px;
+      height: 3px;
+      background: #e8d8a0;
+      border-radius: 2px;
+    }
+
+    /* floating elements */
+    .cricket-ball {
+      position: absolute;
+      width: 32px;
+      height: 32px;
+      background: radial-gradient(circle at 35% 35%, #c8342a, #8b1a12);
+      border-radius: 50%;
+      top: 22%;
+      right: 22%;
+      box-shadow: inset -3px -3px 6px rgba(0,0,0,0.3);
+      animation: ballFloat 6s ease-in-out infinite;
+    }
+
+    .cricket-ball::after {
+      content: '';
+      position: absolute;
+      top: 50%; left: 10%;
+      right: 10%; height: 1.5px;
+      background: rgba(255,255,255,0.25);
+      border-radius: 50%;
+      transform: translateY(-50%);
+    }
+
+    @keyframes ballFloat {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      50% { transform: translateY(-12px) rotate(15deg); }
+    }
+
+    .umbrella {
+      position: absolute;
+      top: 15%;
+      left: 15%;
+      font-size: 3.5rem;
+      animation: umbrellaFloat 8s ease-in-out infinite;
+      filter: drop-shadow(0 4px 8px rgba(0,0,0,0.15));
+    }
+
+    @keyframes umbrellaFloat {
+      0%, 100% { transform: translateY(0) rotate(-5deg); }
+      50% { transform: translateY(-10px) rotate(5deg); }
+    }
+
+    /* ── WEATHER STRIP ── */
+    .weather-strip {
+      background: var(--ink);
+      color: var(--cream);
+      padding: 1rem 4rem;
+      display: flex;
+      gap: 4rem;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .weather-strip::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 0; bottom: 0;
+      width: 4px;
+      background: var(--grass);
+    }
+
+    .weather-item {
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
+      flex-shrink: 0;
+    }
+
+    .weather-label {
+      font-size: 0.7rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      opacity: 0.45;
+    }
+
+    .weather-value {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.4rem;
+      font-weight: 700;
+    }
+
+    .verdict-good { color: #6ec46a; }
+    .verdict-bad  { color: var(--accent); }
+
+    /* ── FEATURES ── */
+    .features {
+      padding: 7rem 4rem;
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 0;
+      border-top: 1px solid rgba(26,26,24,0.1);
+    }
+
+    .feature {
+      padding: 3rem;
+      border-right: 1px solid rgba(26,26,24,0.1);
+      transition: background 0.3s;
+    }
+
+    .feature:last-child { border-right: none; }
+    .feature:hover { background: rgba(45,90,27,0.04); }
+
+    .feature-num {
+      font-family: 'Playfair Display', serif;
+      font-size: 3rem;
+      font-weight: 900;
+      color: rgba(26,26,24,0.08);
+      line-height: 1;
+      margin-bottom: 1.5rem;
+    }
+
+    .feature-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.3rem;
+      font-weight: 700;
+      margin-bottom: 0.75rem;
+      letter-spacing: -0.01em;
+    }
+
+    .feature-body {
+      font-size: 0.95rem;
+      font-weight: 300;
+      line-height: 1.7;
+      color: rgba(26,26,24,0.6);
+    }
+
+    /* ── VERDICT DEMO ── */
+    .demo-section {
+      background: var(--ink);
+      color: var(--cream);
+      padding: 7rem 4rem;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 5rem;
+      align-items: center;
+    }
+
+    .demo-label {
+      font-size: 0.75rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--grass-light);
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .demo-label::before {
+      content: '';
+      display: block;
+      width: 2rem;
+      height: 1.5px;
+      background: var(--grass-light);
+    }
+
+    .demo-heading {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2rem, 3.5vw, 3rem);
+      font-weight: 700;
+      line-height: 1.2;
+      letter-spacing: -0.02em;
+      margin-bottom: 1.5rem;
+    }
+
+    .demo-body {
+      font-size: 1rem;
+      font-weight: 300;
+      line-height: 1.75;
+      color: rgba(245,240,232,0.55);
+    }
+
+    .verdict-card {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 4px;
+      padding: 2.5rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .verdict-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: var(--grass-light);
+    }
+
+    .verdict-card.bad::before { background: var(--accent); }
+
+    .verdict-location {
+      font-size: 0.8rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      opacity: 0.4;
+      margin-bottom: 1.5rem;
+    }
+
+    .verdict-result {
+      font-family: 'Playfair Display', serif;
+      font-size: 2rem;
+      font-weight: 900;
+      margin-bottom: 1rem;
+      color: #6ec46a;
+    }
+
+    .verdict-card.bad .verdict-result { color: var(--accent); }
+
+    .verdict-conditions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin-top: 1.5rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .condition {
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
+    }
+
+    .condition-label {
+      font-size: 0.7rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      opacity: 0.4;
+    }
+
+    .condition-value {
+      font-size: 1rem;
+      font-weight: 500;
+    }
+
+    .condition-value.ok  { color: #6ec46a; }
+    .condition-value.bad { color: var(--accent); }
+
+    /* ── FOOTER ── */
+    footer {
+      padding: 2.5rem 4rem;
+      border-top: 1px solid rgba(26,26,24,0.1);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .footer-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 1rem;
+      font-weight: 900;
+      color: var(--ink);
+      text-decoration: none;
+    }
+
+    .footer-logo span { color: var(--grass); }
+
+    .footer-note {
+      font-size: 0.8rem;
+      color: rgba(26,26,24,0.4);
+    }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .hero-eyebrow { animation: fadeUp 0.6s ease both; }
+    .hero-title   { animation: fadeUp 0.6s ease 0.1s both; }
+    .hero-subtitle{ animation: fadeUp 0.6s ease 0.2s both; }
+    .hero-actions { animation: fadeUp 0.6s ease 0.3s both; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      nav { padding: 1rem 1.5rem; }
+      .nav-links { gap: 1.5rem; }
+
+      .hero {
+        grid-template-columns: 1fr;
+        min-height: auto;
+      }
+
+      .hero-left { padding: 7rem 1.5rem 3rem; }
+      .hero-right { height: 40vh; }
+
+      .features {
+        grid-template-columns: 1fr;
+        padding: 3rem 1.5rem;
+      }
+
+      .feature { border-right: none; border-bottom: 1px solid rgba(26,26,24,0.1); padding: 2rem 1.5rem; }
+      .feature:last-child { border-bottom: none; }
+
+      .demo-section {
+        grid-template-columns: 1fr;
+        padding: 4rem 1.5rem;
+        gap: 3rem;
+      }
+
+      .weather-strip { padding: 1rem 1.5rem; gap: 2rem; }
+      footer { flex-direction: column; gap: 1rem; padding: 2rem 1.5rem; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <a class="nav-logo" href="#"><span>Bat</span> or Brolly</a>
+    <ul class="nav-links">
+      <li><a href="#">Home</a></li>
+      <li><a href="#app">App</a></li>
+      <li><a href="#docs">Docs</a></li>
+      <li><a href="#about">About &amp; Contact</a></li>
+      <li><a href="#app" class="nav-cta">Check conditions</a></li>
+    </ul>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-left">
+      <p class="hero-eyebrow">Cricket weather intelligence</p>
+      <h1 class="hero-title">
+        Bat or<br><em>Brolly?</em>
+      </h1>
+      <p class="hero-subtitle">
+        Real-time weather analysis built for cricketers. Know before you go whether conditions are fit for play — or whether the covers are going on.
+      </p>
+      <div class="hero-actions">
+        <a href="#app" class="btn-primary">Check my ground</a>
+        <a href="#docs" class="btn-ghost">
+          Read the docs
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+            <path d="M3 7h8M7 3l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </a>
+      </div>
+    </div>
+
+    <div class="hero-right">
+      <div class="sky-bg"></div>
+
+      <div class="cloud-group" style="left:10%">
+        <div class="cloud"><div class="cloud-shape"></div></div>
+      </div>
+      <div class="cloud-group" style="left:40%">
+        <div class="cloud"><div class="cloud-shape"></div></div>
+      </div>
+
+      <div class="umbrella">☂</div>
+      <div class="cricket-ball"></div>
+
+      <div class="pitch-container">
+        <div class="outfield"></div>
+        <div class="pitch-strip">
+          <div class="stumps stumps-top">
+            <div class="stump"><div class="bail"></div></div>
+            <div class="stump"></div>
+            <div class="stump"></div>
+          </div>
+          <div class="stumps stumps-bottom">
+            <div class="stump"><div class="bail"></div></div>
+            <div class="stump"></div>
+            <div class="stump"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- WEATHER STRIP -->
+  <div class="weather-strip">
+    <div class="weather-item">
+      <span class="weather-label">Location</span>
+      <span class="weather-value">Taunton, Somerset</span>
+    </div>
+    <div class="weather-item">
+      <span class="weather-label">Temperature</span>
+      <span class="weather-value">17°C</span>
+    </div>
+    <div class="weather-item">
+      <span class="weather-label">Precipitation</span>
+      <span class="weather-value">8%</span>
+    </div>
+    <div class="weather-item">
+      <span class="weather-label">Wind</span>
+      <span class="weather-value">12 km/h</span>
+    </div>
+    <div class="weather-item">
+      <span class="weather-label">Verdict</span>
+      <span class="weather-value verdict-good">Get your bat out</span>
+    </div>
+  </div>
+
+  <!-- FEATURES -->
+  <section class="features">
+    <div class="feature">
+      <div class="feature-num">01</div>
+      <h3 class="feature-title">Cricket-specific logic</h3>
+      <p class="feature-body">Not just a weather app. Conditions are scored against thresholds that actually matter on a cricket pitch — temperature, precipitation probability, wind speed, and cloud cover.</p>
+    </div>
+    <div class="feature">
+      <div class="feature-num">02</div>
+      <h3 class="feature-title">Powered by Open-Meteo</h3>
+      <p class="feature-body">Live forecast data with no API key required. Accurate to your location with hourly precision, so you know what today's play actually looks like.</p>
+    </div>
+    <div class="feature">
+      <div class="feature-num">03</div>
+      <h3 class="feature-title">No faff, no accounts</h3>
+      <p class="feature-body">Type a location, get a verdict. Nothing stored, nothing tracked. Just the answer to the question every cricketer asks on a Saturday morning.</p>
+    </div>
+  </section>
+
+  <!-- VERDICT DEMO -->
+  <section class="demo-section" id="app">
+    <div>
+      <p class="demo-label">How it works</p>
+      <h2 class="demo-heading">A verdict in seconds, not a weather report</h2>
+      <p class="demo-body">Enter any location and Bat or Brolly fetches the current forecast, runs it through the conditions engine, and tells you straight: bat or brolly. No interpretation needed.</p>
+    </div>
+    <div>
+      <div class="verdict-card">
+        <div class="verdict-location">&#9679; Lord's Cricket Ground, London</div>
+        <div class="verdict-result">Get your bat out &#127958;</div>
+        <p style="font-size:0.9rem; opacity:0.55; font-weight:300;">Conditions are looking good. Partly cloudy with low wind and minimal chance of rain.</p>
+        <div class="verdict-conditions">
+          <div class="condition">
+            <span class="condition-label">Temperature</span>
+            <span class="condition-value ok">19°C ✓</span>
+          </div>
+          <div class="condition">
+            <span class="condition-label">Rain chance</span>
+            <span class="condition-value ok">12% ✓</span>
+          </div>
+          <div class="condition">
+            <span class="condition-label">Wind speed</span>
+            <span class="condition-value ok">14 km/h ✓</span>
+          </div>
+          <div class="condition">
+            <span class="condition-label">Cloud cover</span>
+            <span class="condition-value ok">40% ✓</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer id="about">
+    <a class="footer-logo" href="#"><span>Bat</span> or Brolly</a>
+    <p class="footer-note">Weather data via Open-Meteo &middot; Built by Matt Warne</p>
+  </footer>
+
+</body>
+</html>
