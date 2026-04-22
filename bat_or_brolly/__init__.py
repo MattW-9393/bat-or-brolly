@@ -10,12 +10,16 @@ def create_app(test_config=None):
     # a simple page that says hello
     @app.route('/')
     def index():
-        return render_template('index.html', nav_links=[
-            {"href": '/', 'caption': 'Home'},
-            {'href': '/docs', 'caption': 'docs'},
-            {'href': '/about', 'caption': 'About & Contact Us'},
-            {'href': '/bat_or_brolly', 'class': 'nav-cta', 'caption': 'Check conditions'}
-        ])
+        return render_template('index.html',
+                               home_href='/',
+                               docs_href='/docs',
+                               about_href='/about',
+                               app_href='/bat_or_brolly',
+                               nav_links=[{"href": '/', 'caption': 'Home'},
+                                          {'href': '/docs', 'caption': 'docs'},
+                                          {'href': '/about', 'caption': 'About & Contact Us'},
+                                          {'href': '/bat_or_brolly', 'class': 'nav-cta', 'caption': 'Check conditions'}
+                                          ])
 
     @app.route('/bat_or_brolly')
     def hello():
