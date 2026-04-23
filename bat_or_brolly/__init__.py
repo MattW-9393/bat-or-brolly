@@ -6,7 +6,8 @@ class WeatherApp:
     def __init__(self):
         pass
 
-    def get
+    def get_weather(self, url):
+        pass
 
 
 def create_app(test_config=None):
