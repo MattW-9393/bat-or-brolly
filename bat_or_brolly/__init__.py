@@ -2,6 +2,12 @@ import os
 from flask import Flask
 from flask import render_template
 
+class WeatherApp:
+    def __init__(self):
+        pass
+
+    def get
+
 
 def create_app(test_config=None):
     # create and configure the app
