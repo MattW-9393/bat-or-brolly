@@ -3,16 +3,7 @@ from flask import Flask
 from flask import render_template
 import requests
 
-# URL for GeoCodes
-location_url = (f'https://geocoding-api.open-meteo.com/v1/search?name={location_name}'
-                f'&count=10&language=en&format=json'
-                f'&countryCode=GB')
 
-# Get the Geocodes for the chosen location
-weather_location = requests.get(location_url)
-location_content = weather_location.json()
-latitude = location_content['results'][0]['latitude']
-longitude = location_content['results'][0]['longitude']
 
 # Get forecast data
 weather_url = (f'https://api.open-meteo.com/v1/'
@@ -26,12 +17,22 @@ class WeatherApp:
     def __init__(self):
         pass
 
-    def get_weather(self, url):
+    def get_weather(self, latitude, longitude):
         pass
 
-    def get_location(self, location):
-        pass
+    def get_location(self, location_name):
+        # URL for GeoCodes
+        location_url = (f'https://geocoding-api.open-meteo.com/v1/search?name={location_name}'
+                        f'&count=10&language=en&format=json'
+                        f'&countryCode=GB')
 
+        # Get the Geocodes for the chosen location
+        weather_location = requests.get(location_url)
+        location_content = weather_location.json()
+        latitude = location_content['results'][0]['latitude']
+        longitude = location_content['results'][0]['longitude']
+        coordinates = [longitude, latitude]
+        return coordinates
 
 def create_app(test_config=None):
     # create and configure the app
