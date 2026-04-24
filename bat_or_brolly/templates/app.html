@@ -1,7 +1,14 @@
 {% from "_formhelpers.html" import render_field %}
-<form method=get>
+<form method=post action="/bat_or_brolly">
   <dl>
     {{ render_field(form.location) }}
   </dl>
   <p><input type=submit value=Search>
+
 </form>
+
+{% if temperature %}
+<p>{{ temperature }}°C</p>
+<p>{{ rainfall }}%</p>
+<p>{{ wind }} km/h</p>
+{% endif %}
