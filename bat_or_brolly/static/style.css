@@ -854,3 +854,21 @@ footer {
 
   .condition-card:last-child { border-bottom: none; }
 }
+
+.no-ball-error {
+  padding: 1rem 4rem;
+  background: rgba(200, 67, 42, 0.06);
+  border-left: 3px solid var(--accent);
+  font-size: 0.95rem;
+  font-weight: 400;
+  color: var(--ink);
+}
+
+.no-ball-tag {
+  font-family: 'Playfair Display', serif;
+  font-weight: 900;
+  font-style: italic;
+  color: var(--accent);
+  margin-right: 0.5rem;
+  font-size: 1rem;
+}

@@ -42,6 +42,13 @@
     </div>
   </section>
 
+  {% if location_error %}
+<div class="no-ball-error">
+  <span class="no-ball-tag">No ball!</span>
+  Please enter a valid location.
+</div>
+{% endif %}
+
   <!-- RESULTS — only renders when data is present -->
   {% if temperature %}
   <section class="results-section">
@@ -125,6 +132,7 @@
     </div>
 
   </section>
+
   {% endif %}
 
   <!-- FOOTER -->
