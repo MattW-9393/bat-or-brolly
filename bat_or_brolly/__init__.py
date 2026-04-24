@@ -5,6 +5,11 @@ from wtforms import Form, BooleanField, StringField, validators
 import requests
 
 
+class WeatherForm(Form):
+    location = StringField('Location', [validators.Length(min=1)])
+    accept_tos = BooleanField('I accept the TOS', [validators.DataRequired()])
+
+
 def get_weather(coordinates):
     """Get weather using co-ordinates stored in a dict"""
     latitude = coordinates['lat']
