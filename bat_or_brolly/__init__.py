@@ -1,9 +1,7 @@
-import os
-from flask import Flask, request, flash, redirect, url_for
-from flask import render_template
-from wtforms import Form, BooleanField, StringField, validators
 import requests
-from flask_wtf import FlaskForm
+from flask import Flask, request
+from flask import render_template
+from wtforms import Form, StringField, validators
 
 
 class WeatherForm(Form):
@@ -78,7 +76,7 @@ def create_app(test_config=None):
                                           {'href': '/bat_or_brolly', 'class': 'nav-cta', 'caption': 'Check conditions'}
                                           ])
 
-    @app.route('/bat_or_brolly', methods=['GET', 'POST'])
+    @app.route('/bat_or_brolly', methods=['GET'])
     def the_app():
         form = WeatherForm(request.args)
         temperature = None
@@ -88,7 +86,7 @@ def create_app(test_config=None):
         location_error = False
 
         location_name = request.args.get('location')
-        if request.method == 'GET':
+        if location_name:
             location_name = location_name.title()
             coordinates = get_location(location_name)
             if coordinates:
