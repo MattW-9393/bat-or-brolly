@@ -4,9 +4,10 @@
 ## Phase 1 — Build the app
 - [ ] ~~Set up Flask project structure and repo~~
 - [ ] ~~Integrate Open-Meteo API — fetch forecast by location~~
-- [ ] Write cricket conditions logic (temp, rain, wind thresholds)
-- [ ] Build simple HTML frontend — location input + verdict display
-- [ ] Test end-to-end locally
+- [ ] ~~Write cricket conditions logic (temp, rain, wind thresholds)~~
+- [ ] ~~Build simple HTML frontend — location input + verdict display~~
+- [ ] ~~Test end-to-end locally~~
+- [ ] Build some try/except blocks into code
 - [ ] Write a README explaining the project and architectural decisions
 
 ## Phase 2 — Containerise
