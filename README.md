@@ -1,54 +1,71 @@
-# BAT OR BROLLEY
-Cricket-focused weather app
+# Bat or Brolly
+A cricket-focused weather verdict app.
 
-## Architecture Design Decisions
+## Architectural Design Decisions
 
-Open-Meteo — Weather & Geocoding API
+### Open-Meteo — Weather & Geocoding API
 
-I chose open-meteo primarily because it is free, and does not require registration. 
-That meant that there was less of a risk around needing to safely store secrets.
+Open-Meteo was chosen primarily because it is free and requires no registration,
+which eliminated the need to store and manage API secrets. For a public-facing
+app with no authentication layer, this was the appropriate choice.
 
-I used the Geocoding API as Open-Meteo's api requires a longitude and latitude value, therefore by using the Geocoding API I could extract those values and provide them to the API via a dictionary that my get_weather() function extracts. 
+Two separate API calls are made: the Geocoding API first converts a location name
+into latitude and longitude coordinates, which are stored in a dictionary and
+passed to the forecast API. This is necessary because Open-Meteo's forecast
+endpoint requires coordinates rather than a place name.
 
-----------
+### Application Framework — Flask
 
-Application Framework — Flask
+Flask was chosen because it is lightweight and unopinionated, making it well-suited
+to a small, stateless, single-purpose application. Unlike Django, which ships with
+an ORM, admin panel, and significant scaffolding, Flask only provides what is
+needed. It also allowed the entire application to be written in Python without
+introducing a separate frontend framework such as React.
 
-I chose flask as it was the best python framework for a stateless web app. Because it is lightweight and un-opinionated (versus Django which comes with ORM and admin functionality). 
-It enabled me to write full-stack code all in one place, without requiring the number of dependencies something like a REACT app would.
+### Application Structure — Monolithic
 
-----------
+Given the scope of the application — stateless, largely static, with straightforward
+logic — a monolithic structure was a deliberate choice. Splitting the app into
+separate modules would have introduced unnecessary complexity without meaningful
+benefit.
 
-Application Structure — Monolithic
+That said, if the app were to scale significantly — for example, adding freemium
+tiers, user authentication, or a database layer — refactoring into a modular
+structure would be the logical next step.
 
-As the app logic is relatively straightforward, it would have been overkill to set up seperate modules. In terms of apps, it's stateless and the majority of the app is static. Outside of seperating concerns in terms of back end and front end code. Therefore, having a more monolithic structure reduces the complexity. 
+### HTTP Method — GET
 
-That being said, if I wanted to significantly scale the app, creating freemium tiers which subsequently use auth etc, at that point I would have to refactor and create modules, but for now it makes sense for it to be monolithic.
+The form submits via GET rather than POST. Because the app performs a purely
+read-only operation with no sensitive data and no server-side state changes,
+GET is the semantically correct choice. The location travels in the URL query
+string, which also makes results bookmarkable and shareable — a useful side effect
+for this kind of app.
 
-----------
+### Forecast Timing — 2pm GMT
 
-HTTP Method — GET
+Rather than pulling the first available hourly value or using datetime.now(),
+the app specifically targets the 14:00 GMT forecast. This decision was driven
+by cricket domain knowledge: 14:00 is typically when 40-over matches begin,
+and the point up to which 50-over matches can be postponed. Anchoring the
+forecast to a meaningful match time makes the verdict significantly more
+useful than a generic current-conditions check.
 
-I used GET because the site is not sending, or retrieving any sensitive data. The API has no secret, it's not even registered, so it makes sense for it to all be rendered and managed in the URL. Nothing is happening with the data in the server, its purely a "Read" operation
+### Weather Variables — Temperature, Precipitation, Wind
 
-----------
+Temperature, precipitation probability, and wind speed were chosen because they
+are the primary factors that determine whether a cricket match proceeds. These
+decisions were driven by subject-matter knowledge rather than purely technical
+considerations — cloud cover and humidity, for example, were excluded as they
+have a lower practical bearing on match decisions.
 
-Forecast Timing — 2pm GMT
+### Verdict Logic — if/elif/else
 
-I'm actually pulling "2pm GMT" [14]. However, this isn't a random variable. This decision was driven by years or playing cricket, and awareness of match start times.
-14:00 is usually the point at which 40 over cricket matches start, and 50 over cricket matches can be postponed until. Therefore it made sense to specifically select a time-slot relative to actual cricket matches
-as opposed to either [0] or setting a date.time.now() variable.
+Thresholds are based on estimates of typical UK summer playing conditions.
+A simple if/elif/else chain was chosen over a weighted scoring system for two
+reasons: it is proportionate to the app's current scope, and it is more
+performant for a lightweight web application where every request triggers
+a fresh evaluation.
 
-Weather Variables — Temperature, Precipitation, Wind
-
-I chose, temperature, wind and precipitation %, purely because in terms of assessing weather conditions for cricket, those are the most obvious, and have the highest bearing on if a match is called off.
-These architectural decisions were driven largely by subject-matter knowledge of the target audience, as opposed to purely technical decisions.
-----------
-
-Verdict Logic — if/elif/else
-
-The thresholds were estimates of what is considered a pleasant summer conditions in the UK.
-If/elif/else seemed sensible as the app is largely a gimmick app. It was easy to implement and programmatically requires less "horespower" than a scoring system. This is a web app so performance does play some part.
-
-However, these decisions were made based on the app being a scaffold to demonstrate architectural and infrastructure support abilities. If the App was popular and was shown to be a potential commercial product, these aspects can be refactored
-and historical weather data can be included to also help determine the liklihood of play going ahead.
+The thresholds and logic are acknowledged as a starting point. If the app
+were to develop into a commercial product, these could be refined using
+historical weather and match abandonment data to produce a more accurate model.
