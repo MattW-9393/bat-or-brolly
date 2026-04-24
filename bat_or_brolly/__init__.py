@@ -106,4 +106,12 @@ def create_app(test_config=None):
                                verdict=verdict,
                                location_error=location_error)
 
+    @app.route('/docs')
+    def docs():
+        return render_template('docs.html')
+
+    @app.route('/about')
+    def about():
+        return render_template('about.html')
+
     return app
