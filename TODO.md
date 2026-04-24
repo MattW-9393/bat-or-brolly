@@ -2,8 +2,8 @@
 # Build todo — work through phases in order
 
 ## Phase 1 — Build the app
-- [ ] Set up Flask project structure and repo
-- [ ] Integrate Open-Meteo API — fetch forecast by location
+- [ ] ~~Set up Flask project structure and repo~~
+- [ ] ~~Integrate Open-Meteo API — fetch forecast by location~~
 - [ ] Write cricket conditions logic (temp, rain, wind thresholds)
 - [ ] Build simple HTML frontend — location input + verdict display
 - [ ] Test end-to-end locally

@@ -4,50 +4,39 @@ from flask import render_template
 import requests
 
 
+def get_weather(coordinates):
+    """Get weather using co-ordinates stored in a dict"""
+    latitude = coordinates['lat']
+    longitude = coordinates["long"]
 
-# Get forecast data
-weather_url = (f'https://api.open-meteo.com/v1/'
-               f'forecast?latitude={latitude}'
-               f'&longitude={longitude}'
-               f'&hourly=temperature_2m&past_days=0'
-               f'&forecast_days=7')
+    weather_url = (f'https://api.open-meteo.com/v1/'
+                   f'forecast?latitude={latitude}'
+                   f'&longitude={longitude}'
+                   f'&hourly=temperature_2m&past_days=0'
+                   f'&forecast_days=7')
+
+    forecast_response = requests.get(weather_url)
+    forecast_content = forecast_response.json()
+    return forecast_content
 
 
-class WeatherApp:
-    def __init__(self):
-        pass
+def get_location(location_name):
+    location_name = location_name
+    # URL for GeoCodes
+    location_url = (f'https://geocoding-api.open-meteo.com/v1/search?name={location_name}'
+                    f'&count=10&language=en&format=json'
+                    f'&countryCode=GB')
 
-    def get_weather(self, coordinates):
-        latitude = coordinates['lat']
-        longitude = coordinates["long"]
+    # Get the Geocodes for the chosen location
+    weather_location = requests.get(location_url)
+    location_content = weather_location.json()
+    latitude = location_content['results'][0]['latitude']
+    longitude = location_content['results'][0]['longitude']
+    coordinates = {"lat": latitude, "long": longitude}
+    return coordinates
 
-        weather_url = (f'https://api.open-meteo.com/v1/'
-                       f'forecast?latitude={latitude}'
-                       f'&longitude={longitude}'
-                       f'&hourly=temperature_2m&past_days=0'
-                       f'&forecast_days=7')
 
-        forecast_response = requests.get(weather_url)
-        forecast_content = forecast_response.json()
-
-    def get_location(self, location_name):
-        location_name = location_name
-        # URL for GeoCodes
-        location_url = (f'https://geocoding-api.open-meteo.com/v1/search?name={location_name}'
-                        f'&count=10&language=en&format=json'
-                        f'&countryCode=GB')
-
-        # Get the Geocodes for the chosen location
-        weather_location = requests.get(location_url)
-        location_content = weather_location.json()
-        latitude = location_content['results'][0]['latitude']
-        longitude = location_content['results'][0]['longitude']
-        coordinates = {"lat": latitude, "long": longitude}
-        return coordinates
-
-    def render_weather(self):
-        pass
-
+######## FLASK APP CODE ########
 def create_app(test_config=None):
     # create and configure the app
     app = Flask(__name__, instance_relative_config=True)
