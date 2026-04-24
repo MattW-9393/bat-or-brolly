@@ -84,6 +84,7 @@ def create_app(test_config=None):
         temperature = None
         rainfall = None
         wind = None
+        verdict = None
         location_name = request.args.get('location')
         if request.method == 'GET':
             location_name = location_name.title()
@@ -93,10 +94,12 @@ def create_app(test_config=None):
             temperature = weather_data['hourly']['temperature_2m'][14]
             rainfall = weather_data['hourly']['precipitation_probability'][14]
             wind = weather_data['hourly']['windspeed_10m'][14]
-
+            verdict = game_on(temperature,rainfall, wind)
         return render_template('app.html', form=form,
+                               location_name=location_name,
                                temperature=temperature,
                                rainfall=rainfall,
-                               wind=wind)
+                               wind=wind,
+                               verdict=verdict)
 
     return app
