@@ -1,14 +1,137 @@
-{% from "_formhelpers.html" import render_field %}
-<form method=get action="/bat_or_brolly">
-  <dl>
-    {{ render_field(form.location) }}
-  </dl>
-  <p><input type=submit value=Search>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bat or Brolly — Check Conditions</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+</head>
+<body>
 
-</form>
+  <!-- NAV -->
+  <nav>
+    <a class="nav-logo" href="/"><span>Bat</span> or Brolly</a>
+    <ul class="nav-links">
+      <li><a href="/">Home</a></li>
+      <li><a href="/bat_or_brolly" class="nav-cta">Check conditions</a></li>
+    </ul>
+  </nav>
 
-{% if temperature %}
-<p>{{ temperature }}°C</p>
-<p>{{ rainfall }}%</p>
-<p>{{ wind }} km/h</p>
-{% endif %}
+  <!-- APP HERO -->
+  <section class="app-hero">
+    <div class="app-hero-inner">
+      <h1 class="app-title">Bat or <em>Brolly?</em></h1>
+      <p class="app-subtitle">Enter a location to get your verdict.</p>
+
+      <!-- SEARCH FORM -->
+      {% from "_formhelpers.html" import render_field %}
+      <form method="get" action="/bat_or_brolly" class="search-form">
+        <div class="search-row">
+          {{ render_field(form.location) }}
+          <button type="submit" class="search-btn">
+            Check
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+              <path d="M3 7h8M7 3l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <!-- RESULTS — only renders when data is present -->
+  {% if temperature %}
+  <section class="results-section">
+
+    <!-- VERDICT BANNER -->
+    <div class="verdict-banner {% if verdict == 'Game off' or verdict == 'Poor conditions' %}verdict-banner--bad{% elif verdict == 'Excellent conditions' %}verdict-banner--excellent{% endif %}">
+      <div class="verdict-banner-inner">
+        <span class="verdict-location-tag">&#9679; {{ location_name }}</span>
+        <h2 class="verdict-headline">{{ verdict }}</h2>
+      </div>
+    </div>
+
+    <!-- CONDITIONS STRIP -->
+    <div class="weather-strip">
+      <div class="weather-item">
+        <span class="weather-label">Location</span>
+        <span class="weather-value">{{ location_name }}</span>
+      </div>
+      <div class="weather-item">
+        <span class="weather-label">Temperature</span>
+        <span class="weather-value">{{ temperature }}°C</span>
+      </div>
+      <div class="weather-item">
+        <span class="weather-label">Precipitation</span>
+        <span class="weather-value">{{ rainfall }}%</span>
+      </div>
+      <div class="weather-item">
+        <span class="weather-label">Wind</span>
+        <span class="weather-value">{{ wind }} km/h</span>
+      </div>
+      <div class="weather-item">
+        <span class="weather-label">Verdict</span>
+        <span class="weather-value {% if verdict == 'Excellent conditions' or verdict == 'Good conditions' %}verdict-good{% else %}verdict-bad{% endif %}">
+          {{ verdict }}
+        </span>
+      </div>
+    </div>
+
+    <!-- CONDITION CARDS -->
+    <div class="condition-cards">
+
+      <div class="condition-card">
+        <span class="condition-card-label">Temperature</span>
+        <span class="condition-card-value {% if temperature > 10 %}ok{% else %}bad{% endif %}">
+          {{ temperature }}°C
+        </span>
+        <span class="condition-card-note">
+          {% if temperature > 18 %}Warm — ideal playing conditions
+          {% elif temperature > 14 %}Mild — playable with layers
+          {% elif temperature > 10 %}Cool — borderline
+          {% else %}Too cold for play{% endif %}
+        </span>
+      </div>
+
+      <div class="condition-card">
+        <span class="condition-card-label">Rain chance</span>
+        <span class="condition-card-value {% if rainfall < 55 %}ok{% else %}bad{% endif %}">
+          {{ rainfall }}%
+        </span>
+        <span class="condition-card-note">
+          {% if rainfall < 40 %}Low — covers staying off
+          {% elif rainfall < 55 %}Moderate — keep an eye on it
+          {% elif rainfall < 70 %}High — may interrupt play
+          {% else %}Very likely — covers on{% endif %}
+        </span>
+      </div>
+
+      <div class="condition-card">
+        <span class="condition-card-label">Wind speed</span>
+        <span class="condition-card-value {% if wind < 30 %}ok{% else %}bad{% endif %}">
+          {{ wind }} km/h
+        </span>
+        <span class="condition-card-note">
+          {% if wind < 19 %}Light — no issues
+          {% elif wind < 25 %}Moderate — affects the ball
+          {% elif wind < 30 %}Strong — difficult conditions
+          {% else %}Too windy for play{% endif %}
+        </span>
+      </div>
+
+    </div>
+
+  </section>
+  {% endif %}
+
+  <!-- FOOTER -->
+  <footer>
+    <a class="footer-logo" href="/"><span>Bat</span> or Brolly</a>
+    <p class="footer-note">Weather data via Open-Meteo &middot; Built by Matt Warne</p>
+  </footer>
+
+</body>
+</html>

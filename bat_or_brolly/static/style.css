@@ -650,3 +650,207 @@ footer {
     text-align: center;
   }
 }
+
+# App page css
+
+
+/* ────────────────────────────────────────
+   APP PAGE — additional styles
+   Append these to the bottom of style.css
+   ──────────────────────────────────────── */
+
+/* ── APP HERO ── */
+.app-hero {
+  min-height: 40vh;
+  display: flex;
+  align-items: center;
+  padding-top: 6rem;
+  background: var(--cream);
+  border-bottom: 1px solid rgba(26,26,24,0.08);
+}
+
+.app-hero-inner {
+  padding: 4rem 4rem 3rem;
+  max-width: 640px;
+}
+
+.app-title {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  font-weight: 900;
+  line-height: 1.0;
+  letter-spacing: -0.03em;
+  margin-bottom: 0.75rem;
+  color: var(--ink);
+}
+
+.app-title em {
+  font-style: italic;
+  color: var(--grass);
+}
+
+.app-subtitle {
+  font-size: 1rem;
+  font-weight: 300;
+  color: rgba(26,26,24,0.55);
+  margin-bottom: 2rem;
+}
+
+/* ── SEARCH FORM ── */
+.search-form { width: 100%; }
+
+.search-row {
+  display: flex;
+  align-items: stretch;
+  gap: 0;
+  max-width: 480px;
+}
+
+/* Override WTForms default field styling */
+.search-row dl { margin: 0; flex: 1; }
+.search-row dt { display: none; }
+.search-row dd { margin: 0; }
+
+.search-row input[type="text"],
+.search-row input[type="search"] {
+  width: 100%;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 1rem;
+  font-weight: 400;
+  color: var(--ink);
+  background: white;
+  border: 1.5px solid rgba(26,26,24,0.2);
+  border-right: none;
+  border-radius: 2px 0 0 2px;
+  padding: 0.85rem 1.25rem;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.search-row input[type="text"]:focus,
+.search-row input[type="search"]:focus {
+  border-color: var(--grass);
+}
+
+.search-btn {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.875rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--cream);
+  background: var(--ink);
+  border: none;
+  border-radius: 0 2px 2px 0;
+  padding: 0.85rem 1.5rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: background 0.2s;
+  white-space: nowrap;
+}
+
+.search-btn svg { transition: transform 0.2s; }
+.search-btn:hover { background: var(--grass); }
+.search-btn:hover svg { transform: translateX(3px); }
+
+/* ── VERDICT BANNER ── */
+.verdict-banner {
+  background: var(--ink);
+  color: var(--cream);
+  padding: 3rem 4rem;
+  border-top: 3px solid var(--grass-light);
+}
+
+.verdict-banner--excellent { border-top-color: #6ec46a; }
+.verdict-banner--bad       { border-top-color: var(--accent); }
+
+.verdict-banner-inner { max-width: 800px; }
+
+.verdict-location-tag {
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  opacity: 0.4;
+  display: block;
+  margin-bottom: 0.75rem;
+}
+
+.verdict-headline {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(2rem, 4vw, 3.5rem);
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+}
+
+/* ── CONDITION CARDS ── */
+.condition-cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  border-top: 1px solid rgba(26,26,24,0.1);
+}
+
+.condition-card {
+  padding: 2.5rem 3rem;
+  border-right: 1px solid rgba(26,26,24,0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  transition: background 0.3s;
+}
+
+.condition-card:last-child { border-right: none; }
+.condition-card:hover { background: rgba(45,90,27,0.03); }
+
+.condition-card-label {
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(26,26,24,0.45);
+}
+
+.condition-card-value {
+  font-family: 'Playfair Display', serif;
+  font-size: 2.5rem;
+  font-weight: 900;
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+
+.condition-card-value.ok  { color: var(--grass); }
+.condition-card-value.bad { color: var(--accent); }
+
+.condition-card-note {
+  font-size: 0.85rem;
+  font-weight: 300;
+  color: rgba(26,26,24,0.55);
+  line-height: 1.5;
+  margin-top: 0.25rem;
+}
+
+/* ── RESULTS SECTION ── */
+.results-section {
+  animation: fadeUp 0.5s ease both;
+}
+
+/* ── APP PAGE RESPONSIVE ── */
+@media (max-width: 900px) {
+  .app-hero-inner { padding: 5rem 1.5rem 2.5rem; }
+
+  .search-row { max-width: 100%; }
+
+  .verdict-banner { padding: 2rem 1.5rem; }
+
+  .condition-cards { grid-template-columns: 1fr; }
+
+  .condition-card {
+    border-right: none;
+    border-bottom: 1px solid rgba(26,26,24,0.1);
+    padding: 1.75rem 1.5rem;
+  }
+
+  .condition-card:last-child { border-bottom: none; }
+}
