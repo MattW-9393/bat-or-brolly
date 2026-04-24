@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bat or Brolly — About</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <a class="nav-logo" href="/"><span>Bat</span> or Brolly</a>
+    <ul class="nav-links">
+      <li><a href="/">Home</a></li>
+      <li><a href="/docs">Docs</a></li>
+      <li><a href="/about">About</a></li>
+      <li><a href="/bat_or_brolly" class="nav-cta">Check conditions</a></li>
+    </ul>
+  </nav>
+
+  <!-- ABOUT HERO -->
+  <section class="about-hero">
+    <div class="about-hero-inner">
+      <p class="hero-eyebrow">About</p>
+      <h1 class="about-title">The app &<br><em>the person behind it</em></h1>
+    </div>
+  </section>
+
+  <!-- ABOUT BODY -->
+  <div class="about-body">
+
+    <!-- THE APP -->
+    <div class="about-section about-section--dark">
+      <div class="about-section-inner">
+        <span class="about-section-label">The app</span>
+        <div class="about-section-content">
+          <h2 class="about-heading">Built for cricketers,<br>by a cricketer</h2>
+          <p>Bat or Brolly started with a familiar Saturday morning ritual — checking three different weather apps, getting three different answers, and still not knowing whether to bother making the trip to the ground.</p>
+          <p>The app pulls live forecast data from Open-Meteo and runs it against cricket-specific thresholds — temperature, wind speed, and precipitation probability — to give a single, plain-English verdict. It checks the 14:00 GMT forecast, which corresponds to typical start times for 40-over and 50-over recreational matches across the UK.</p>
+          <p>It won't tell you whether to officially call off a game. That's for your captain, your umpires, and your ground staff. But it'll give you a decent read of whether it's worth packing the kit bag.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- THE PERSON -->
+    <div class="about-section">
+      <div class="about-section-inner">
+        <span class="about-section-label">The builder</span>
+        <div class="about-section-content">
+          <h2 class="about-heading">Matt Warne</h2>
+          <p>I've played cricket for as long as I can remember — mostly in Somerset, mostly in the rain. When I'm not on the pitch I spend time in the workshop refurbishing cricket bats, which turns out to be a surprisingly meditative way to spend an evening.</p>
+          <p>Professionally, I work in IT and am building towards a career in cloud infrastructure and solutions architecture. Bat or Brolly is a project I built to sharpen my skills across the full stack — Flask, AWS, Terraform, Docker, and CI/CD — while solving a problem I actually had.</p>
+          <p>It's a gimmick app with a serious infrastructure story behind it.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- LINKS -->
+    <div class="about-links-section">
+      <span class="about-section-label">Find me online</span>
+      <div class="about-links">
+
+        <a href="https://github.com/MattW-9393" target="_blank" rel="noopener noreferrer" class="about-link-card">
+          <div class="about-link-icon">
+            <svg viewBox="0 0 24 24" fill="currentColor" width="22" height="22">
+              <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/>
+            </svg>
+          </div>
+          <div class="about-link-text">
+            <span class="about-link-name">GitHub</span>
+            <span class="about-link-handle">MattW-9393</span>
+          </div>
+          <svg class="about-link-arrow" width="14" height="14" viewBox="0 0 14 14" fill="none">
+            <path d="M3 7h8M7 3l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </a>
+
+        <a href="https://www.linkedin.com/in/matt-warne-227863342" target="_blank" rel="noopener noreferrer" class="about-link-card">
+          <div class="about-link-icon">
+            <svg viewBox="0 0 24 24" fill="currentColor" width="22" height="22">
+              <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+            </svg>
+          </div>
+          <div class="about-link-text">
+            <span class="about-link-name">LinkedIn</span>
+            <span class="about-link-handle">Matt Warne</span>
+          </div>
+          <svg class="about-link-arrow" width="14" height="14" viewBox="0 0 14 14" fill="none">
+            <path d="M3 7h8M7 3l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </a>
+
+        <a href="https://cloudlog-matt.hashnode.dev/" target="_blank" rel="noopener noreferrer" class="about-link-card">
+          <div class="about-link-icon">
+            <svg viewBox="0 0 24 24" fill="currentColor" width="22" height="22">
+              <path d="M22.351 8.019l-6.37-6.37a5.63 5.63 0 0 0-7.962 0l-6.37 6.37a5.63 5.63 0 0 0 0 7.962l6.37 6.37a5.63 5.63 0 0 0 7.962 0l6.37-6.37a5.63 5.63 0 0 0 0-7.962zM12 15.953a3.953 3.953 0 1 1 0-7.906 3.953 3.953 0 0 1 0 7.906z"/>
+            </svg>
+          </div>
+          <div class="about-link-text">
+            <span class="about-link-name">Blog</span>
+            <span class="about-link-handle">cloudlog-matt.hashnode.dev</span>
+          </div>
+          <svg class="about-link-arrow" width="14" height="14" viewBox="0 0 14 14" fill="none">
+            <path d="M3 7h8M7 3l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </a>
+
+      </div>
+    </div>
+
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <a class="footer-logo" href="/"><span>Bat</span> or Brolly</a>
+    <p class="footer-note">Weather data via Open-Meteo &middot; Built by Matt Warne</p>
+  </footer>
+
+</body>
+</html>

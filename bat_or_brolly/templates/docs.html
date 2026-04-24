@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bat or Brolly — User Guide</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <a class="nav-logo" href="/"><span>Bat</span> or Brolly</a>
+    <ul class="nav-links">
+      <li><a href="/">Home</a></li>
+      <li><a href="/docs">Docs</a></li>
+      <li><a href="/about">About</a></li>
+      <li><a href="/bat_or_brolly" class="nav-cta">Check conditions</a></li>
+    </ul>
+  </nav>
+
+  <!-- DOCS HERO -->
+  <section class="docs-hero">
+    <div class="docs-hero-inner">
+      <p class="hero-eyebrow">User Guide</p>
+      <h1 class="docs-title">How to use<br><em>Bat or Brolly</em></h1>
+      <p class="docs-lead">Everything you need to know about getting a verdict — and understanding what it means.</p>
+    </div>
+  </section>
+
+  <!-- DISCLAIMER BANNER -->
+  <div class="disclaimer-banner">
+    <div class="disclaimer-inner">
+      <span class="disclaimer-icon">⚠</span>
+      <p><strong>Indicative only.</strong> Bat or Brolly is a guide, not a decision-making tool. Weather forecasts carry inherent uncertainty, and match officials, ground staff, and umpires should always make the final call on whether a game goes ahead. Never use this app as the sole basis for cancelling or confirming a match.</p>
+    </div>
+  </div>
+
+  <!-- DOCS CONTENT -->
+  <div class="docs-body">
+
+    <!-- SECTION 1 -->
+    <div class="docs-section">
+      <div class="docs-section-num">01</div>
+      <div class="docs-section-content">
+        <h2 class="docs-section-title">Getting a verdict</h2>
+        <p>Navigate to the <a href="/bat_or_brolly" class="docs-link">Check Conditions</a> page and enter the name of a town, city, or village in the search field. Hit <strong>Check</strong> and Bat or Brolly will fetch the current forecast and return a verdict within seconds.</p>
+        <p>You don't need to enter a full address — a place name is enough. For best results, use a specific town rather than a county or region.</p>
+        <div class="docs-example">
+          <span class="docs-example-label">Good examples</span>
+          <div class="docs-example-tags">
+            <span class="docs-tag docs-tag--good">Taunton</span>
+            <span class="docs-tag docs-tag--good">Lords Cricket Ground</span>
+            <span class="docs-tag docs-tag--good">Headingley</span>
+            <span class="docs-tag docs-tag--good">Old Trafford</span>
+          </div>
+          <span class="docs-example-label" style="margin-top: 1rem;">Avoid</span>
+          <div class="docs-example-tags">
+            <span class="docs-tag docs-tag--bad">Somerset</span>
+            <span class="docs-tag docs-tag--bad">The North</span>
+            <span class="docs-tag docs-tag--bad">England</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION 2 -->
+    <div class="docs-section">
+      <div class="docs-section-num">02</div>
+      <div class="docs-section-content">
+        <h2 class="docs-section-title">UK locations only</h2>
+        <p>Bat or Brolly is built specifically for UK cricket. The geocoding is restricted to Great Britain, and the weather thresholds are calibrated against typical UK summer playing conditions. Entering a location outside the UK may return no result or an inaccurate verdict.</p>
+        <p>The verdict thresholds are based on what constitutes reasonable playing conditions in a British summer — not the standards you'd apply in the subcontinent or the Caribbean.</p>
+      </div>
+    </div>
+
+    <!-- SECTION 3 -->
+    <div class="docs-section">
+      <div class="docs-section-num">03</div>
+      <div class="docs-section-content">
+        <h2 class="docs-section-title">When is the forecast taken?</h2>
+        <p>The app always checks the <strong>14:00 GMT forecast</strong> for today, regardless of what time you check it. This isn't arbitrary — 14:00 is typically when 40-over matches start, and the point up to which 50-over matches can be postponed. It gives you the most relevant snapshot for match day decisions.</p>
+        <p>If you're checking conditions for an evening fixture or a morning net session, bear in mind the 14:00 figure may not fully reflect conditions at your specific start time.</p>
+      </div>
+    </div>
+
+    <!-- SECTION 4 -->
+    <div class="docs-section">
+      <div class="docs-section-num">04</div>
+      <div class="docs-section-content">
+        <h2 class="docs-section-title">Understanding the verdict</h2>
+        <p>Verdicts are based on three variables — temperature, precipitation probability, and wind speed. Here's what each verdict means:</p>
+
+        <div class="verdict-guide">
+          <div class="verdict-guide-item verdict-guide-item--excellent">
+            <span class="verdict-guide-label">Excellent conditions</span>
+            <span class="verdict-guide-desc">Warm, low wind, minimal rain chance. Get your whites on.</span>
+          </div>
+          <div class="verdict-guide-item verdict-guide-item--good">
+            <span class="verdict-guide-label">Good conditions</span>
+            <span class="verdict-guide-desc">Mild and manageable. A decent day's cricket is on the cards.</span>
+          </div>
+          <div class="verdict-guide-item verdict-guide-item--playable">
+            <span class="verdict-guide-label">Playable but not ideal</span>
+            <span class="verdict-guide-desc">Borderline. Conditions are tricky but not a washout. Bring layers.</span>
+          </div>
+          <div class="verdict-guide-item verdict-guide-item--poor">
+            <span class="verdict-guide-label">Poor conditions</span>
+            <span class="verdict-guide-desc">At least one factor is significantly against play. Worth monitoring.</span>
+          </div>
+          <div class="verdict-guide-item verdict-guide-item--off">
+            <span class="verdict-guide-label">Game off</span>
+            <span class="verdict-guide-desc">Conditions fall outside all acceptable thresholds. Don't bother packing the kit bag.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION 5 -->
+    <div class="docs-section">
+      <div class="docs-section-num">05</div>
+      <div class="docs-section-content">
+        <h2 class="docs-section-title">The weather variables</h2>
+
+        <div class="vars-grid">
+          <div class="var-card">
+            <span class="var-name">Temperature</span>
+            <span class="var-unit">°C</span>
+            <p class="var-desc">Surface air temperature at 2 metres. Conditions above 18°C are considered comfortable; below 10°C is too cold for most recreational play.</p>
+          </div>
+          <div class="var-card">
+            <span class="var-name">Precipitation probability</span>
+            <span class="var-unit">%</span>
+            <p class="var-desc">The likelihood of rainfall at the forecast time. Below 40% is considered low risk; above 70% suggests rain is likely enough to interrupt or abandon play.</p>
+          </div>
+          <div class="var-card">
+            <span class="var-name">Wind speed</span>
+            <span class="var-unit">km/h</span>
+            <p class="var-desc">Measured at 10 metres above ground. Below 19 km/h has minimal effect on the ball; above 30 km/h makes conditions genuinely difficult for both batting and bowling.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ISSUE REPORTING -->
+    <div class="docs-issue">
+      <div class="docs-issue-inner">
+        <h3 class="docs-issue-title">Something not right?</h3>
+        <p class="docs-issue-body">If you've found a bug, an inaccurate verdict, or a location that isn't resolving correctly, please raise an issue on GitHub. Include the location you searched and the verdict you received.</p>
+        <a href="https://github.com/MattW-9393/bat-or-brolly/issues" target="_blank" rel="noopener noreferrer" class="docs-issue-btn">
+          Raise an issue on GitHub
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+            <path d="M3 7h8M7 3l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </a>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <a class="footer-logo" href="/"><span>Bat</span> or Brolly</a>
+    <p class="footer-note">Weather data via Open-Meteo &middot; Built by Matt Warne</p>
+  </footer>
+
+</body>
+</html>
