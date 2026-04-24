@@ -7,8 +7,8 @@
 - [ ] ~~Write cricket conditions logic (temp, rain, wind thresholds)~~
 - [ ] ~~Build simple HTML frontend — location input + verdict display~~
 - [ ] ~~Test end-to-end locally~~
-- [ ] Build some try/except blocks into code
-- [ ] Write a README explaining the project and architectural decisions
+- [ ] ~~Build some try/except blocks into code~~
+- [ ] ~~Write a README explaining the project and architectural decisions~~
 
 ## Phase 2 — Containerise
 - [ ] Write a Dockerfile for the Flask app
