@@ -9,10 +9,9 @@ from flask_wtf import FlaskForm
 class WeatherForm(Form):
     location = StringField('Location', [validators.Length(min=1)])
 
-
-
+# Weather Functions
 def get_weather(coordinates):
-    """Get weather using co-ordinates stored in a dict"""
+    """Get weather from Open-Meteo API using co-ordinates stored in a dict"""
     latitude = coordinates['lat']
     longitude = coordinates["long"]
 
@@ -29,6 +28,8 @@ def get_weather(coordinates):
 
 
 def get_location(location_name):
+    """Get GeoCode co-oridnates in latitude/longitude format
+     to be used in the open-meteo API call"""
     location_name = location_name
     # URL for GeoCodes
     location_url = (f'https://geocoding-api.open-meteo.com/v1/search?name={location_name}'
@@ -43,6 +44,20 @@ def get_location(location_name):
     coordinates = {"lat": latitude, "long": longitude}
     return coordinates
 
+
+# Cricket Logic code
+def game_on(temperature, rainfall, wind):
+    if 18 < temperature < 25 and wind < 19 and rainfall < 40:
+        verdict = "Excellent conditions"
+    elif 14 < temperature <= 18 and wind < 25 and rainfall < 55:
+        verdict = "Good conditions"
+    elif 10 < temperature <= 14 and wind < 30 and rainfall < 70:
+        verdict = "Playable but not ideal"
+    elif 7 < temperature <= 10 or wind >= 30 or rainfall >= 70:
+        verdict = "Poor conditions"
+    else:
+        verdict = "Game off"
+    return verdict
 
 ######## FLASK APP CODE ########
 def create_app(test_config=None):
@@ -65,17 +80,19 @@ def create_app(test_config=None):
 
     @app.route('/bat_or_brolly', methods=['GET', 'POST'])
     def the_app():
-        form = WeatherForm(request.form)
+        form = WeatherForm(request.args)
         temperature = None
         rainfall = None
         wind = None
-        if request.method == 'POST':
-            location_name = form.location.data.title()
+        location_name = request.args.get('location')
+        if request.method == 'GET':
+            location_name = location_name.title()
             coordinates = get_location(location_name)
             weather_data = get_weather(coordinates)
-            temperature = weather_data['hourly']['temperature_2m'][0]
-            rainfall = weather_data['hourly']['precipitation_probability'][0]
-            wind = weather_data['hourly']['windspeed_10m'][0]
+            # Time set at 14:00 of the current day for Weather Statistics
+            temperature = weather_data['hourly']['temperature_2m'][14]
+            rainfall = weather_data['hourly']['precipitation_probability'][14]
+            wind = weather_data['hourly']['windspeed_10m'][14]
 
         return render_template('app.html', form=form,
                                temperature=temperature,
