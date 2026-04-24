@@ -9,6 +9,7 @@ from flask_wtf import FlaskForm
 class WeatherForm(Form):
     location = StringField('Location', [validators.Length(min=1)])
 
+
 # Weather Functions
 def get_weather(coordinates):
     """Get weather from Open-Meteo API using co-ordinates stored in a dict"""
@@ -28,21 +29,19 @@ def get_weather(coordinates):
 
 
 def get_location(location_name):
-    """Get GeoCode co-oridnates in latitude/longitude format
-     to be used in the open-meteo API call"""
-    location_name = location_name
-    # URL for GeoCodes
-    location_url = (f'https://geocoding-api.open-meteo.com/v1/search?name={location_name}'
-                    f'&count=10&language=en&format=json'
-                    f'&countryCode=GB')
-
-    # Get the Geocodes for the chosen location
-    weather_location = requests.get(location_url)
-    location_content = weather_location.json()
-    latitude = location_content['results'][0]['latitude']
-    longitude = location_content['results'][0]['longitude']
-    coordinates = {"lat": latitude, "long": longitude}
-    return coordinates
+    """Get GeoCode co-ordinates in latitude/longitude format
+        to be used in the open-meteo API call. Try except means that 'None'
+        is returned gracefully."""
+    try:
+        location_url = (f'https://geocoding-api.open-meteo.com/v1/search?name={location_name}'
+                        f'&count=10&language=en&format=json&countryCode=GB')
+        weather_location = requests.get(location_url)
+        location_content = weather_location.json()
+        latitude = location_content['results'][0]['latitude']
+        longitude = location_content['results'][0]['longitude']
+        return {"lat": latitude, "long": longitude}
+    except (KeyError, IndexError):
+        return None
 
 
 # Cricket Logic code
@@ -58,6 +57,7 @@ def game_on(temperature, rainfall, wind):
     else:
         verdict = "Game off"
     return verdict
+
 
 ######## FLASK APP CODE ########
 def create_app(test_config=None):
@@ -85,21 +85,27 @@ def create_app(test_config=None):
         rainfall = None
         wind = None
         verdict = None
+        location_error = False
+
         location_name = request.args.get('location')
         if request.method == 'GET':
             location_name = location_name.title()
             coordinates = get_location(location_name)
-            weather_data = get_weather(coordinates)
-            # Time set at 14:00 of the current day for Weather Statistics
-            temperature = weather_data['hourly']['temperature_2m'][14]
-            rainfall = weather_data['hourly']['precipitation_probability'][14]
-            wind = weather_data['hourly']['windspeed_10m'][14]
-            verdict = game_on(temperature,rainfall, wind)
+            if coordinates:
+                weather_data = get_weather(coordinates)
+                # Time set at 14:00 of the current day for Weather Statistics
+                temperature = weather_data['hourly']['temperature_2m'][14]
+                rainfall = weather_data['hourly']['precipitation_probability'][14]
+                wind = weather_data['hourly']['windspeed_10m'][14]
+                verdict = game_on(temperature, rainfall, wind)
+            else:
+                location_error = True
         return render_template('app.html', form=form,
                                location_name=location_name,
                                temperature=temperature,
                                rainfall=rainfall,
                                wind=wind,
-                               verdict=verdict)
+                               verdict=verdict,
+                               location_error=location_error)
 
     return app
