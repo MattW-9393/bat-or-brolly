@@ -1,5 +1,5 @@
 # Bat or Brolly
-A cricket-focused weather verdict app.
+🏏 A cricket-focused weather verdict app 🏏
 
 ## Architectural Design Decisions
 
