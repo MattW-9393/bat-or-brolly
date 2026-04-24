@@ -1,7 +1,7 @@
 {% from "_formhelpers.html" import render_field %}
-<form method=post>
+<form method=get>
   <dl>
     {{ render_field(form.location) }}
   </dl>
-  <p><input type=submit value=findloc>
+  <p><input type=submit value=Search>
 </form>

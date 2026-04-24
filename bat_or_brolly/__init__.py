@@ -1,8 +1,9 @@
 import os
-from flask import Flask
+from flask import Flask, request, flash
 from flask import render_template
 from wtforms import Form, BooleanField, StringField, validators
 import requests
+from flask_wtf import FlaskForm
 
 
 class WeatherForm(Form):
@@ -62,15 +63,12 @@ def create_app(test_config=None):
                                           ])
 
     @app.route('/bat_or_brolly')
-    def hello():
-        return render_template('app.html')
+    def the_app():
+        form = WeatherForm(request.form)
+        if request.method == 'GET' and form.validate():
+            location_name = form.location.data
 
-    @app.route('/docs')
-    def docs():
-        return 'The docs are here'
-
-    @app.route('/about')
-    def about():
-        return 'here is info, contact me here'
+            flash('Looking now')
+        return render_template('app.html', form=form)
 
     return app
