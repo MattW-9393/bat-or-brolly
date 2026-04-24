@@ -16,7 +16,9 @@
     <a class="nav-logo" href="/"><span>Bat</span> or Brolly</a>
     <ul class="nav-links">
       <li><a href="/">Home</a></li>
-      <li><a href="/bat_or_brolly" class="nav-cta">Check conditions</a></li>
+      {% for item in nav_links %}
+      <li><a href="{{ item.href }}" class="{{item.class}}">{{ item.caption }}</a></li>
+      {% endfor %}
     </ul>
   </nav>
 

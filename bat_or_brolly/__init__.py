@@ -104,7 +104,12 @@ def create_app(test_config=None):
                                rainfall=rainfall,
                                wind=wind,
                                verdict=verdict,
-                               location_error=location_error)
+                               location_error=location_error,
+                               nav_links=[{"href": '/', 'caption': 'Home'},
+                                          {'href': '/docs', 'caption': 'docs'},
+                                          {'href': '/about', 'caption': 'About & Contact Us'},
+                                          {'href': '/bat_or_brolly', 'class': 'nav-cta', 'caption': 'Check conditions'}
+                                          ])
 
     @app.route('/docs')
     def docs():
