@@ -11,9 +11,9 @@
 - [ ] ~~Write a README explaining the project and architectural decisions~~
 
 ## Phase 2 — Containerise
-- [ ] Write a Dockerfile for the Flask app
-- [ ] Build and run the image locally
-- [ ] Confirm app behaves identically inside the container
+- [ ] ~~Write a Dockerfile for the Flask app~~
+- [ ] ~~Build and run the image locally~~
+- [ ] ~~Confirm app behaves identically inside the container~~
 
 ## Phase 3 — Deploy to AWS
 - [ ] Create ECR repository and push Docker image
