@@ -6,8 +6,7 @@
 
 # Want to help us make this template better? Share your feedback here: https://forms.gle/ybq9Krt8jtBL3iCk7
 
-ARG PYTHON_VERSION=3.14.3
-FROM python:${PYTHON_VERSION}-slim as base
+FROM python:3.12-slim
 
 # Prevents Python from writing pyc files.
 ENV PYTHONDONTWRITEBYTECODE=1
@@ -48,4 +47,4 @@ COPY . .
 EXPOSE 80
 
 # Run the application.
-CMD gunicorn '.venv.lib.python3.14.site-packages.gunicorn.http.wsgi' --bind=0.0.0.0:80
+CMD ["gunicorn", "--bind", "0.0.0.0:80", "bat_or_brolly:create_app()"]
