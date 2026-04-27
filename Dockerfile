@@ -47,4 +47,4 @@ COPY . .
 EXPOSE 80
 
 # Run the application.
-CMD ["gunicorn", "--bind", "0.0.0.0:80", "bat_or_brolly:create_app()"]
+CMD ["gunicorn", "--bind", "0.0.0.0:8000", "bat_or_brolly:create_app()"]

@@ -16,7 +16,7 @@
 - [ ] ~~Confirm app behaves identically inside the container~~
 
 ## Phase 3 — Deploy to AWS
-- [ ] Create ECR repository and push Docker image
+- [ ] ~~Create ECR repository and push Docker image~~
 - [ ] Set up ECS Fargate cluster, task definition, and service
 - [ ] Configure Application Load Balancer
 - [ ] Attach a custom domain (optional but worth doing)
