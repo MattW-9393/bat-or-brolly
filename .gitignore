@@ -14,7 +14,7 @@ venv/
 .terraform.lock.hcl
 
 # Docker
-.dockerignore
+
 
 # OS
 .DS_Store
