@@ -13,9 +13,6 @@ venv/
 *.tfvars
 .terraform.lock.hcl
 
-# Docker
-
-
 # OS
 .DS_Store
 Thumbs.db

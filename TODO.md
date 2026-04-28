@@ -17,10 +17,10 @@
 
 ## Phase 3 — Deploy to AWS
 - [ ] ~~Create ECR repository and push Docker image~~
-- [ ] Set up ECS Fargate cluster, task definition, and service
-- [ ] Configure Application Load Balancer
+- [ ] ~~Set up ECS Fargate cluster, task definition, and service~~
+- [ ] ~~Configure Application Load Balancer~~
 - [ ] Attach a custom domain (optional but worth doing)
-- [ ] Smoke test the live deployment
+- [ ] ~~Smoke test the live deployment~~
 
 ## Phase 4 — Infrastructure as code
 - [ ] Write Terraform for ECR, ECS, ALB, and IAM roles
