@@ -69,3 +69,46 @@ a fresh evaluation.
 The thresholds and logic are acknowledged as a starting point. If the app
 were to develop into a commercial product, these could be refined using
 historical weather and match abandonment data to produce a more accurate model.
+
+## Infrastructure
+
+### Containerisation
+
+I used Docker to ensure that whichever local host is utilising my application will be able to run it exactly as I have locally (providing environmental parity). The containerised application ensures that whichever machine is hosting my application will be running all the same versions of the dependencies as the device the app was created on, preventing any "it works on my machine"-type issues. This is achieved through Docker utilising the 'requirements.txt' file in my codebase.
+
+### Base Image
+
+I utilised python 12-slim for two main reasons. I went for 3.12 as it has LTS, with a wealth of support available, both officially in terms of patching, bug fixes etc, and also in terms of community support via forums and message boards. Where as the newer 3.14 does not quite have that depth of use and support.
+
+Because I only need my image to run my code, I opted for the 'slim' image because it does not include all of the build tools the full image comes with, as these would be redundant, as my app does not compile anything at runtime. It will also ensure that I am cost-optimising my serverless compute resources by not having any memory used by redundant tooling.
+
+### Gunicorn
+
+I used Gunicorn because it can handle multiple requests at the same time, where as the flask server is not multi-threaded and so cannot handle higher volumes of requests. In theory this is probably not a huge issue for a portfolio app, but given how easy it is to install and bind gunicorn, it made no sense to stay with the flask's own production server, with it's known limitations and the fact that Flask explicitly saying not to use it outside of development.
+I opted for 3 "workers" because the general formula for number of workers is 2 per CPU core, +1. Because I have opted for a 0.25 vCPU, this needs to be rounded up to 1vCPU (for the purposes of the formula) - Therefore this was simply a matter of following best practice.
+
+## Infra&Deployment
+
+### ECS Fargate
+
+Fargate was chosen specifically because, even though it is technically more costly in terms of compute, the time I don't have to invest in maintaining the infrastructure (as Fargate is serverless) makes up for that cost-saving. Also, "serverless wherever possible" is effectively an unwritten rule of AWS, and something they actively encourage in the 6 pillars of thier Well Architected Framework.
+The ALB gives me a layer of security by providing public facing endpoint for all inbound internet traffic, with its TLS termination, and load balancing. If the container was exposed directly this would be a security risk as the container would be exposed to all HTTP traffic from 'anywhere'. As an aside, using the ALB also meant that I didn't have to configure a reverse proxy server, such as NGINX as TLS termination and routing is handled by the ALB. However, if the app was ever required to scale up to cope with higher traffic demands, or more complex routing was required, NGINX could be introduced.
+
+### Terraform
+
+I chose to use Terraform to manage my infrastructure, through IaC instead of via the console because it enabled a fast, uniformed approach to deploying reproducible infrastructure. Where as the console can lead to inconsistencies in resources being spun up due to it's manual configuration process. 
+Terraform was used as it is a multi-cloud tool - So if I needed to move to another cloud provider, then I could still utilise my Terraform resources, albeit with some tweaking, on top of that, the syntax is widely viewed as much cleaner and less verbose than CloudFormation.
+
+A Remote state in S3 with DB Locking meant that I would be able to store all of my version control/IaC deployment records in a clouded environment for better safety and improved continuity, in the event of anything happening to my infrastructure. It also means that if there are any concurrent applies, then the DB will be Locked, preventing state corruption.
+
+I have purposefully kept this as a dev environment as this is a portfolio project. However, if I was looking to formally launch this as a production app, I could easily introduce a prod.tfvars file that would be used to override key values such as higher vCPU and Memory resources that would be required in a production environment.
+
+### CI/CD
+
+I implemented a CI/CD pipeline because it will allow me to automatically deploy any changes that are pushed to my 'main' branch (ie, once those deployments are ready for prod). 
+
+Per AWS's Well Architected Framework, I opted to use OICD with an IAM Role. This is inline with the principle of least priviledge, however the OICD specifically was chosen as it creates temporary credentials, that are only valid until the job has executed. This mitigates the risk of long-lived credentials, such as CLI access keys, being exploited.
+
+By using the SHA tags I get an effective version control, instead of having to overwrite "latest" every time, it also provides traceability, via the corresponding ecs -> sha tags
+
+By only running 'apply' on the push to main, it ensures that only a reviewed and approved (by a human) version of the commit is submitted in to the live environment. This is especially important in terms of infrastructure; where a mistake could destroy production resources, or incur a high monetary cost.
