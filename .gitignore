@@ -13,6 +13,9 @@ venv/
 *.tfvars
 .terraform.lock.hcl
 
+# AWS credentials - never commit
+~/.aws/
+
 # OS
 .DS_Store
 Thumbs.db
