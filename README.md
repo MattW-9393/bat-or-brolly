@@ -74,41 +74,44 @@ historical weather and match abandonment data to produce a more accurate model.
 
 ### Containerisation
 
-I used Docker to ensure that whichever local host is utilising my application will be able to run it exactly as I have locally (providing environmental parity). The containerised application ensures that whichever machine is hosting my application will be running all the same versions of the dependencies as the device the app was created on, preventing any "it works on my machine"-type issues. This is achieved through Docker utilising the 'requirements.txt' file in my codebase.
+I used Docker to ensure that whichever host is running my application will be able to run it exactly as I have locally, providing environmental parity. The containerised application ensures that whichever machine is hosting the app will be running all the same versions of the dependencies as the device it was created on, preventing any "it works on my machine"-type issues. Docker achieves this by installing all dependencies from the `requirements.txt` file during the image build, ensuring every environment runs identical versions regardless of what is installed on the host machine.
 
 ### Base Image
 
-I utilised python 12-slim for two main reasons. I went for 3.12 as it has LTS, with a wealth of support available, both officially in terms of patching, bug fixes etc, and also in terms of community support via forums and message boards. Where as the newer 3.14 does not quite have that depth of use and support.
+I used `python:3.12-slim` for two main reasons. I chose 3.12 as it is a stable, well-established release with a defined support window until 2028, meaning security patches and bug fixes are guaranteed for the foreseeable future. The newer 3.14 does not yet have that same depth of use and community support.
 
-Because I only need my image to run my code, I opted for the 'slim' image because it does not include all of the build tools the full image comes with, as these would be redundant, as my app does not compile anything at runtime. It will also ensure that I am cost-optimising my serverless compute resources by not having any memory used by redundant tooling.
+Because I only need my image to run my code, I opted for the `slim` variant because it does not include the build tools that come with the full image — those would be redundant, as my app does not compile anything at runtime. It also ensures I am cost-optimising my serverless compute resources by not carrying any memory overhead from unnecessary tooling.
 
 ### Gunicorn
 
-I used Gunicorn because it can handle multiple requests at the same time, where as the flask server is not multi-threaded and so cannot handle higher volumes of requests. In theory this is probably not a huge issue for a portfolio app, but given how easy it is to install and bind gunicorn, it made no sense to stay with the flask's own production server, with it's known limitations and the fact that Flask explicitly saying not to use it outside of development.
-I opted for 3 "workers" because the general formula for number of workers is 2 per CPU core, +1. Because I have opted for a 0.25 vCPU, this needs to be rounded up to 1vCPU (for the purposes of the formula) - Therefore this was simply a matter of following best practice.
+I used Gunicorn because it can handle multiple requests simultaneously, whereas Flask's built-in server is not multi-threaded and cannot handle higher volumes of traffic. In theory this is probably not a significant issue for a portfolio app, but given how straightforward it is to install and bind Gunicorn, there was no good reason to stay with Flask's own development server — particularly given that Flask explicitly warns against using it outside of development.
 
-## Infra&Deployment
+I opted for 3 workers because the standard formula for worker count is (2 × CPU cores) + 1. With a 0.25 vCPU allocation, this rounds up to 1 vCPU for the purposes of the formula, giving 3 workers — this was simply a matter of following best practice.
+
+## Infrastructure & Deployment
 
 ### ECS Fargate
 
-Fargate was chosen specifically because, even though it is technically more costly in terms of compute, the time I don't have to invest in maintaining the infrastructure (as Fargate is serverless) makes up for that cost-saving. Also, "serverless wherever possible" is effectively an unwritten rule of AWS, and something they actively encourage in the 6 pillars of thier Well Architected Framework.
-The ALB gives me a layer of security by providing public facing endpoint for all inbound internet traffic, with its TLS termination, and load balancing. If the container was exposed directly this would be a security risk as the container would be exposed to all HTTP traffic from 'anywhere'. As an aside, using the ALB also meant that I didn't have to configure a reverse proxy server, such as NGINX as TLS termination and routing is handled by the ALB. However, if the app was ever required to scale up to cope with higher traffic demands, or more complex routing was required, NGINX could be introduced.
+Fargate was chosen because, even though it is technically more costly in terms of compute, the operational overhead saved by not having to manage the underlying infrastructure (Fargate being serverless) justifies that cost. "Serverless wherever possible" is also something AWS actively encourages across the 6 pillars of their Well-Architected Framework.
+
+The Application Load Balancer provides a secure public-facing endpoint for all inbound internet traffic, with TLS termination and load balancing. Exposing the container directly would present a security risk, as it would be accessible to all HTTP traffic from anywhere on the internet. Using the ALB also meant that a separate reverse proxy such as NGINX was unnecessary, as TLS termination and routing are handled at the load balancer level. However, if the app were ever required to scale to handle higher traffic demands or more complex routing requirements, NGINX could be introduced.
 
 ### Terraform
 
-I chose to use Terraform to manage my infrastructure, through IaC instead of via the console because it enabled a fast, uniformed approach to deploying reproducible infrastructure. Where as the console can lead to inconsistencies in resources being spun up due to it's manual configuration process. 
-Terraform was used as it is a multi-cloud tool - So if I needed to move to another cloud provider, then I could still utilise my Terraform resources, albeit with some tweaking, on top of that, the syntax is widely viewed as much cleaner and less verbose than CloudFormation.
+I chose to manage my infrastructure through IaC with Terraform rather than via the console because it enables a fast, uniform approach to deploying reproducible infrastructure. Manual console configuration can lead to inconsistencies in the resources that are created, and makes it impossible to reliably recreate an environment from scratch.
 
-A Remote state in S3 with DB Locking meant that I would be able to store all of my version control/IaC deployment records in a clouded environment for better safety and improved continuity, in the event of anything happening to my infrastructure. It also means that if there are any concurrent applies, then the DB will be Locked, preventing state corruption.
+Terraform was chosen over AWS's own CloudFormation because it is a multi-cloud tool — if I needed to migrate to another cloud provider, my Terraform resources could be adapted accordingly. Additionally, Terraform's HCL syntax is widely regarded as significantly cleaner and less verbose than CloudFormation.
 
-I have purposefully kept this as a dev environment as this is a portfolio project. However, if I was looking to formally launch this as a production app, I could easily introduce a prod.tfvars file that would be used to override key values such as higher vCPU and Memory resources that would be required in a production environment.
+Remote state in S3 with DynamoDB locking means all infrastructure state is stored in a cloud environment, providing better safety and continuity in the event of anything happening to my local machine. It also prevents state corruption from concurrent applies — if two instances of Terraform were to run simultaneously, the DynamoDB lock ensures only one can proceed at a time.
+
+I have deliberately kept this as a dev environment given that this is a portfolio project. However, if this app were ever formally launched as a production application, a `prod.tfvars` file could easily be introduced to override key values such as CPU, memory, and task count to meet the demands of a production workload — without any changes to `main.tf`.
 
 ### CI/CD
 
-I implemented a CI/CD pipeline because it will allow me to automatically deploy any changes that are pushed to my 'main' branch (ie, once those deployments are ready for prod). 
+I implemented a CI/CD pipeline to automatically deploy any changes pushed to the `main` branch, removing the risk of human error inherent in manual deployment steps — forgotten commands, incorrect ordering, or skipped stages.
 
-Per AWS's Well Architected Framework, I opted to use OICD with an IAM Role. This is inline with the principle of least priviledge, however the OICD specifically was chosen as it creates temporary credentials, that are only valid until the job has executed. This mitigates the risk of long-lived credentials, such as CLI access keys, being exploited.
+In line with AWS's Well-Architected Framework, I opted to use OIDC with a dedicated IAM role rather than long-lived access keys. This follows the principle of least privilege, and OIDC specifically was chosen because it issues temporary credentials that are only valid for the duration of the job. This mitigates the risk of long-lived credentials, such as CLI access keys, being leaked or exploited.
 
-By using the SHA tags I get an effective version control, instead of having to overwrite "latest" every time, it also provides traceability, via the corresponding ecs -> sha tags
+By tagging Docker images with the commit SHA rather than overwriting `latest` on every push, I get effective version control and full traceability — any running ECS task can be traced back to the exact commit that produced it.
 
-By only running 'apply' on the push to main, it ensures that only a reviewed and approved (by a human) version of the commit is submitted in to the live environment. This is especially important in terms of infrastructure; where a mistake could destroy production resources, or incur a high monetary cost.
+The infrastructure workflow runs `terraform plan` on pull requests but only executes `terraform apply` on a push to main. This ensures that infrastructure changes are reviewed and approved by a human before being applied to the live environment — particularly important given that a Terraform mistake could destroy production resources or incur significant unexpected cost.
