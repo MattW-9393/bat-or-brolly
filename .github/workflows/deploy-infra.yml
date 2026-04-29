@@ -1,0 +1,52 @@
+name: deploy-infra
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'terraform/**'
+  pull_request:
+
+env:
+  AWS_REGION: eu-west-2
+  # Don't think I need these...
+  ECR_REGISTRY: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.eu-west-2.amazonaws.com
+  ECR_REPOSITORY: bat-or-brolly-dev
+  ECS_CLUSTER: bat-or-brolly-dev-ecs-cluster
+  ECS_SERVICE: bat-or-brolly-dev-service
+  CONTAINER_NAME: bat-or-brolly-dev
+  ECS_TASK_DEFINITION: .aws/task-definition.json
+
+
+jobs:
+  terraform_deploy:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+
+
+    steps:
+      - name: checkout
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/bat-or-brolly-github-actions-role
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Terraform Init
+        run: terraform init
+
+      - name: Format Terraform
+        run: terraform fmt
+
+      - name: Terraform Plan
+        run: terraform plan
+
+      - name: Terraform Apply
+        # if github reference header is "main" and the event is push -> run tf apply
+        if: github.ref == 'refs/heads/"main"' && github.event_name == 'push'
+        run: terraform apply -auto-approve -input=false
+
