@@ -1,6 +1,64 @@
 # Bat or Brolly
 🏏 A cricket-focused weather verdict app 🏏
 
+Bat or Brolly answers the question every recreational cricketer asks on a Saturday morning: is it worth making the trip to the ground? Enter a UK location and the app fetches the 14:00 GMT forecast from Open-Meteo, runs it against cricket-specific weather thresholds, and returns a plain-English verdict — from *Excellent conditions* to *Game off*.
+
+Built as a portfolio project to demonstrate full-stack Python development, containerisation, cloud infrastructure, and CI/CD — with production-appropriate architecture throughout.
+
+> **Note:** Bat or Brolly is indicative only. Match officials, umpires, and ground staff should always make the final call on whether a game proceeds.
+
+---
+
+## Tech Stack
+
+| Layer | Technology |
+|---|---|
+| Backend | Python 3.12, Flask, Gunicorn |
+| Frontend | HTML, CSS, Jinja2 |
+| Weather Data | Open-Meteo (free, no API key required) |
+| Container | Docker (`python:3.12-slim`) |
+| Cloud Compute | AWS ECS Fargate |
+| Load Balancer | AWS Application Load Balancer |
+| Image Registry | AWS ECR |
+| Infrastructure as Code | Terraform (remote state in S3, DynamoDB locking) |
+| CI/CD | GitHub Actions with OIDC authentication |
+
+---
+
+## Architecture Overview
+
+```
+Internet (HTTP)
+    │
+  ALB — TLS termination, load balancing
+    │
+  ECS Fargate — managed container runtime
+    │
+  Docker container
+    ├── Gunicorn — production WSGI server
+    └── Flask app — weather logic & verdict engine
+              │
+        Open-Meteo API
+        (Geocoding + Forecast)
+```
+
+---
+
+## Running Locally
+
+```bash
+git clone https://github.com/MattW-9393/bat-or-brolly
+cd bat-or-brolly
+python -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+flask --app bat_or_brolly run --debug
+```
+
+Visit `http://localhost:5000` in your browser.
+
+---
+
 ## Architectural Design Decisions
 
 ### Open-Meteo — Weather & Geocoding API
