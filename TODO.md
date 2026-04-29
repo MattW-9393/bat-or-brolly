@@ -23,10 +23,10 @@
 - [ ] ~~Smoke test the live deployment~~
 
 ## Phase 4 — Infrastructure as code
-- [ ] Write Terraform for ECR, ECS, ALB, and IAM roles
-- [ ] Parameterise environment-specific values
-- [ ] Tear down manual AWS resources and redeploy via Terraform
-- [ ] Store Terraform state in S3 with DynamoDB locking
+- [ ] ~~Write Terraform for ECR, ECS, ALB, and IAM roles~~
+- [ ] ~~Parameterise environment-specific values~~
+- [ ] ~~Tear down manual AWS resources and redeploy via Terraform~~
+- [ ] ~~Store Terraform state in S3 with DynamoDB locking~~
 
 ## Phase 5 — CI/CD pipeline
 - [ ] Set up GitHub Actions workflow file
