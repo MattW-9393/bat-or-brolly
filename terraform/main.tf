@@ -213,7 +213,7 @@ resource "aws_ecs_service" "ecs_service" {
     assign_public_ip = false
   }
 
-
+  # Remove LoadBalancer Ref
 
   tags = {
     Name        = "${var.app_name}-${var.environment}"
