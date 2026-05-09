@@ -169,7 +169,27 @@ resource "aws_ecs_task_definition" "ecs_task" {
           awslogs-stream-prefix = "ecs"
         }
       }
-    }
+    },
+    {
+            name      = "cloudflared"
+            image     = "cloudflare/cloudflared:latest"
+            essential = true
+            command   = ["tunnel", "--no-autoupdate", "run"]
+            environment = [
+                {
+                    name  = "TUNNEL_TOKEN"
+                    value = var.cloudflare_tunnel_token
+                }
+            ]
+            logConfiguration = {
+                logDriver = "awslogs"
+                options = {
+                    awslogs-group         = aws_cloudwatch_log_group.logs.name
+                    awslogs-region        = var.region
+                    awslogs-stream-prefix = "cloudflared"
+                }
+            }
+        }
   ])
 
   tags = {
@@ -190,14 +210,10 @@ resource "aws_ecs_service" "ecs_service" {
   network_configuration {
     subnets          = data.aws_subnets.default.ids
     security_groups  = [aws_security_group.ecs_sg.id]
-    assign_public_ip = true
+    assign_public_ip = false
   }
 
-  load_balancer {
-    target_group_arn = aws_lb_target_group.alb_tg.arn
-    container_name   = aws_ecr_repository.app_container.name
-    container_port   = var.container_port
-  }
+
 
   tags = {
     Name        = "${var.app_name}-${var.environment}"
