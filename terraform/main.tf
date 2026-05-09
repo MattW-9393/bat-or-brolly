@@ -110,16 +110,8 @@ resource "aws_iam_role_policy_attachment" "policy" {
 # ECS SG
 resource "aws_security_group" "ecs_sg" {
   name        = "${var.app_name}-${var.environment}-ecs-sg"
-  description = "Allow traffic from ALB to ECS tasks"
+  description = "ECS task security group — outbound only, cloudflared handles inbound"
   vpc_id      = data.aws_vpc.default.id
-
-  ingress {
-    description     = "ECS task security group for Bat or Brolly"
-    from_port       = 8000
-    to_port         = 8000
-    protocol        = "tcp"
-    security_groups = [aws_security_group.alb_sg.id]
-  }
 
   egress {
     from_port   = 0
