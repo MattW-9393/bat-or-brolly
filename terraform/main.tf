@@ -168,63 +168,6 @@ resource "aws_security_group" "ecs_sg" {
   }
 }
 
-# ALB
-
-resource "aws_lb" "app_loadbalancer" {
-  name               = "${var.app_name}-${var.environment}-alb"
-  internal           = false
-  load_balancer_type = "application"
-  security_groups    = [aws_security_group.alb_sg.id]
-  subnets            = data.aws_subnets.default.ids
-
-  tags = {
-    Name        = "${var.app_name}-${var.environment}"
-    Environment = var.environment
-    ManagedBy   = "terraform"
-  }
-}
-
-# ALB Target Group
-resource "aws_lb_target_group" "alb_tg" {
-  name = "${var.app_name}-${var.environment}-alb-tg"
-  # where to forward the ALB traffic onto
-  port        = 8000
-  protocol    = "HTTP"
-  vpc_id      = data.aws_vpc.default.id
-  target_type = "ip"
-
-  health_check {
-    path                = "/"
-    protocol            = "HTTP"
-    healthy_threshold   = 2
-    unhealthy_threshold = 3
-    interval            = 30
-  }
-
-  tags = {
-    Name        = "${var.app_name}-${var.environment}"
-    Environment = var.environment
-    ManagedBy   = "terraform"
-  }
-}
-
-# ALB listener
-resource "aws_lb_listener" "alb_listener" {
-  load_balancer_arn = aws_lb.app_loadbalancer.arn
-  port              = 80
-  protocol          = "HTTP"
-
-  default_action {
-    type             = "forward"
-    target_group_arn = aws_lb_target_group.alb_tg.arn
-  }
-
-  tags = {
-    Name        = "${var.app_name}-${var.environment}"
-    Environment = var.environment
-    ManagedBy   = "terraform"
-  }
-}
 
 # ECS
 # Cluster
