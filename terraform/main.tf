@@ -170,26 +170,20 @@ resource "aws_ecs_task_definition" "ecs_task" {
         }
       }
     },
-    {
-      name      = "cloudflared"
-      image     = "cloudflare/cloudflared:latest"
-      essential = true
-      command   = ["tunnel", "--no-autoupdate", "run"]
-      environment = [
-        {
-          name  = "TUNNEL_TOKEN"
-          value = var.cloudflare_tunnel_token
-        }
-      ]
-      logConfiguration = {
+{
+    name      = "cloudflared"
+    image     = "cloudflare/cloudflared:latest"
+    essential = false
+    command   = ["tunnel", "--no-autoupdate", "run", "--token", var.cloudflare_tunnel_token]
+    logConfiguration = {
         logDriver = "awslogs"
         options = {
-          awslogs-group         = aws_cloudwatch_log_group.logs.name
-          awslogs-region        = var.region
-          awslogs-stream-prefix = "cloudflared"
+            awslogs-group         = aws_cloudwatch_log_group.logs.name
+            awslogs-region        = var.region
+            awslogs-stream-prefix = "cloudflared"
         }
-      }
     }
+}
   ])
 
   tags = {
