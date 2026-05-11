@@ -3,7 +3,7 @@ from flask import Flask, request
 from flask import render_template
 from wtforms import Form, StringField, validators
 
-
+#Adding comment to test GH Actions
 class WeatherForm(Form):
     location = StringField('Location', [validators.Length(min=1)])
 

@@ -1,0 +1,4 @@
+region                  = "eu-west-2"
+account_id              = "YOUR_ACCOUNT_ID"
+ecr_uri                 = "YOUR_ECR_URI"
+cloudflare_tunnel_token = "YOUR_TUNNEL_TOKEN"

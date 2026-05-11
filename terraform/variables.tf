@@ -52,3 +52,10 @@ variable "memory" {
   type        = number
   default     = 512
 }
+
+variable "cloudflare_tunnel_token" {
+  description = "Cloudflare tunnel token for cloudflared sidecar"
+  type        = string
+  sensitive   = true
+}
+

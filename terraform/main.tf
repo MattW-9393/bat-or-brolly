@@ -105,54 +105,13 @@ resource "aws_iam_role_policy_attachment" "policy" {
 # Security Groups
 
 # ALB Security Group
-resource "aws_security_group" "alb_sg" {
-  name        = "${var.app_name}-${var.environment}-alb-sg"
-  description = "Allow HTTP traffic to ALB"
-  vpc_id      = data.aws_vpc.default.id
 
-  ingress {
-    description = "HTTP from internet"
-    from_port   = 80
-    to_port     = 80
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  ingress {
-    description = "HTTPS from internet"
-    from_port   = 443
-    to_port     = 443
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  tags = {
-    Name        = "${var.app_name}-${var.environment}"
-    Environment = var.environment
-    ManagedBy   = "terraform"
-  }
-}
 
 # ECS SG
 resource "aws_security_group" "ecs_sg" {
   name        = "${var.app_name}-${var.environment}-ecs-sg"
-  description = "Allow traffic from ALB to ECS tasks"
+  description = "ECS task security group — outbound only, cloudflared handles inbound"
   vpc_id      = data.aws_vpc.default.id
-
-  ingress {
-    description     = "ECS task security group for Bat or Brolly"
-    from_port       = 8000
-    to_port         = 8000
-    protocol        = "tcp"
-    security_groups = [aws_security_group.alb_sg.id]
-  }
 
   egress {
     from_port   = 0
@@ -168,63 +127,6 @@ resource "aws_security_group" "ecs_sg" {
   }
 }
 
-# ALB
-
-resource "aws_lb" "app_loadbalancer" {
-  name               = "${var.app_name}-${var.environment}-alb"
-  internal           = false
-  load_balancer_type = "application"
-  security_groups    = [aws_security_group.alb_sg.id]
-  subnets            = data.aws_subnets.default.ids
-
-  tags = {
-    Name        = "${var.app_name}-${var.environment}"
-    Environment = var.environment
-    ManagedBy   = "terraform"
-  }
-}
-
-# ALB Target Group
-resource "aws_lb_target_group" "alb_tg" {
-  name = "${var.app_name}-${var.environment}-alb-tg"
-  # where to forward the ALB traffic onto
-  port        = 8000
-  protocol    = "HTTP"
-  vpc_id      = data.aws_vpc.default.id
-  target_type = "ip"
-
-  health_check {
-    path                = "/"
-    protocol            = "HTTP"
-    healthy_threshold   = 2
-    unhealthy_threshold = 3
-    interval            = 30
-  }
-
-  tags = {
-    Name        = "${var.app_name}-${var.environment}"
-    Environment = var.environment
-    ManagedBy   = "terraform"
-  }
-}
-
-# ALB listener
-resource "aws_lb_listener" "alb_listener" {
-  load_balancer_arn = aws_lb.app_loadbalancer.arn
-  port              = 80
-  protocol          = "HTTP"
-
-  default_action {
-    type             = "forward"
-    target_group_arn = aws_lb_target_group.alb_tg.arn
-  }
-
-  tags = {
-    Name        = "${var.app_name}-${var.environment}"
-    Environment = var.environment
-    ManagedBy   = "terraform"
-  }
-}
 
 # ECS
 # Cluster
@@ -267,7 +169,27 @@ resource "aws_ecs_task_definition" "ecs_task" {
           awslogs-stream-prefix = "ecs"
         }
       }
-    }
+    },
+    {
+            name      = "cloudflared"
+            image     = "cloudflare/cloudflared:latest"
+            essential = true
+            command   = ["tunnel", "--no-autoupdate", "run"]
+            environment = [
+                {
+                    name  = "TUNNEL_TOKEN"
+                    value = var.cloudflare_tunnel_token
+                }
+            ]
+            logConfiguration = {
+                logDriver = "awslogs"
+                options = {
+                    awslogs-group         = aws_cloudwatch_log_group.logs.name
+                    awslogs-region        = var.region
+                    awslogs-stream-prefix = "cloudflared"
+                }
+            }
+        }
   ])
 
   tags = {
@@ -288,14 +210,10 @@ resource "aws_ecs_service" "ecs_service" {
   network_configuration {
     subnets          = data.aws_subnets.default.ids
     security_groups  = [aws_security_group.ecs_sg.id]
-    assign_public_ip = true
+    assign_public_ip = false
   }
 
-  load_balancer {
-    target_group_arn = aws_lb_target_group.alb_tg.arn
-    container_name   = aws_ecr_repository.app_container.name
-    container_port   = var.container_port
-  }
+  # Remove LoadBalancer Ref
 
   tags = {
     Name        = "${var.app_name}-${var.environment}"
