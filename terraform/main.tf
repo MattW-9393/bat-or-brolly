@@ -97,8 +97,8 @@ resource "aws_iam_role" "role" {
 
 resource "aws_iam_role_policy_attachment" "policy" {
   # role comes from the resource defined above
-    role       = aws_iam_role.role.name
-    policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
+  role       = aws_iam_role.role.name
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
 }
 
 
@@ -110,7 +110,7 @@ resource "aws_iam_role_policy_attachment" "policy" {
 # ECS SG
 resource "aws_security_group" "ecs_sg" {
   name        = "${var.app_name}-${var.environment}-ecs-sg"
-  description = "ECS task security group — outbound only, cloudflared handles inbound"
+  description = "ECS task security group - outbound only, cloudflared handles inbound"
   vpc_id      = data.aws_vpc.default.id
 
   egress {
@@ -171,25 +171,25 @@ resource "aws_ecs_task_definition" "ecs_task" {
       }
     },
     {
-            name      = "cloudflared"
-            image     = "cloudflare/cloudflared:latest"
-            essential = true
-            command   = ["tunnel", "--no-autoupdate", "run"]
-            environment = [
-                {
-                    name  = "TUNNEL_TOKEN"
-                    value = var.cloudflare_tunnel_token
-                }
-            ]
-            logConfiguration = {
-                logDriver = "awslogs"
-                options = {
-                    awslogs-group         = aws_cloudwatch_log_group.logs.name
-                    awslogs-region        = var.region
-                    awslogs-stream-prefix = "cloudflared"
-                }
-            }
+      name      = "cloudflared"
+      image     = "cloudflare/cloudflared:latest"
+      essential = true
+      command   = ["tunnel", "--no-autoupdate", "run"]
+      environment = [
+        {
+          name  = "TUNNEL_TOKEN"
+          value = var.cloudflare_tunnel_token
         }
+      ]
+      logConfiguration = {
+        logDriver = "awslogs"
+        options = {
+          awslogs-group         = aws_cloudwatch_log_group.logs.name
+          awslogs-region        = var.region
+          awslogs-stream-prefix = "cloudflared"
+        }
+      }
+    }
   ])
 
   tags = {
@@ -210,7 +210,7 @@ resource "aws_ecs_service" "ecs_service" {
   network_configuration {
     subnets          = data.aws_subnets.default.ids
     security_groups  = [aws_security_group.ecs_sg.id]
-    assign_public_ip = false
+    assign_public_ip = true
   }
 
   # Remove LoadBalancer Ref
