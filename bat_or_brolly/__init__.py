@@ -25,6 +25,9 @@ def get_weather(coordinates):
     forecast_content = forecast_response.json()
     return forecast_content
 
+def select_date(chosen_date):
+    """Select a date to get a specific weather reading of the user's choice"""
+    # Do something
 
 def get_location(location_name):
     """Get GeoCode co-ordinates in latitude/longitude format
