@@ -39,12 +39,9 @@ def get_weather(coordinates, date_str, time_str):
     return {
         'temperature': forecast_content['hourly']['temperature_2m'][index],
         'rainfall':    forecast_content['hourly']['precipitation_probability'][index],
-        'wind':        forecast_content['hourly']['wind_speed_10m'][index]
+        'wind':        forecast_content['hourly']['windspeed_10m'][index]
     }
 
-def select_date(chosen_date):
-    """Select a date to get a specific weather reading of the user's choice"""
-    # Do something
 
 def get_location(location_name):
     """Get GeoCode co-ordinates in latitude/longitude format
