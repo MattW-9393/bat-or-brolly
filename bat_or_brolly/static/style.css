@@ -1363,3 +1363,45 @@ footer {
   .verdict-guide-item { flex-direction: column; align-items: flex-start; gap: 0.25rem; }
   .verdict-guide-label { min-width: unset; }
 }
+
+/* ── SEARCH FIELD GROUP — date and time inputs ── */
+.search-field-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.search-label {
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(26,26,24,0.45);
+  margin-bottom: 2px;
+}
+
+.search-input {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 1rem;
+  font-weight: 400;
+  color: var(--ink);
+  background: white;
+  border: 1.5px solid rgba(26,26,24,0.2);
+  border-radius: 2px;
+  padding: 0.85rem 1rem;
+  outline: none;
+  transition: border-color 0.2s;
+  height: 100%;
+}
+
+.search-input:focus {
+  border-color: var(--grass);
+}
+
+.search-row {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+  max-width: 100%;
+  flex-wrap: wrap;
+}
