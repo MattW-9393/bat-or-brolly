@@ -92,6 +92,7 @@ def create_app(test_config=None):
         if location_name:
             location_name = location_name.title()
             coordinates = get_location(location_name)
+            # add get date/time function
             if coordinates:
                 weather_data = get_weather(coordinates)
                 # Time set at 14:00 of the current day for Weather Statistics
