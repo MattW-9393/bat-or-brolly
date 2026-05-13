@@ -2,6 +2,8 @@ import requests
 from flask import Flask, request
 from flask import render_template
 from wtforms import Form, StringField, validators
+from datetime import date, timedelta
+
 
 #Adding comment to test GH Actions
 class WeatherForm(Form):
@@ -95,6 +97,8 @@ def create_app(test_config=None):
 
     @app.route('/bat_or_brolly', methods=['GET'])
     def the_app():
+        today = date.today().isoformat()
+        max_date = (date.today() + timedelta(days=7)).isoformat()
         form = WeatherForm(request.args)
         temperature = None
         rainfall = None
@@ -120,7 +124,9 @@ def create_app(test_config=None):
                     location_error = True  # date/time outside forecast window
             else:
                 location_error = True
-        return render_template('app.html', form=form,
+        return render_template('app.html', 
+                               today=today, max_date=max_date,
+                               form=form,
                                location_name=location_name,
                                temperature=temperature,
                                rainfall=rainfall,
