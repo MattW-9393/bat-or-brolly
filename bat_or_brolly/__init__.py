@@ -26,7 +26,7 @@ def get_weather(coordinates, date_str, time_str):
 
     forecast_response = requests.get(weather_url)
     forecast_content = forecast_response.json()
-
+##
     # Build the target datetime string to match Open-Meteo's format
     # e.g. "2026-05-13T14:00"
     target = f"{date_str}T{time_str}"
