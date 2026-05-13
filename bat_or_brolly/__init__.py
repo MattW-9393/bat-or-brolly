@@ -5,7 +5,6 @@ from wtforms import Form, StringField, validators
 from datetime import date, timedelta
 
 
-#Adding comment to test GH Actions
 class WeatherForm(Form):
     location = StringField('Location', [validators.Length(min=1)])
     
