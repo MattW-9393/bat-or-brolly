@@ -38,6 +38,7 @@ def get_weather(coordinates, date_str, time_str):
 
     index = times.index(target)
 
+
     return {
         'temperature': forecast_content['hourly']['temperature_2m'][index],
         'rainfall':    forecast_content['hourly']['precipitation_probability'][index],
