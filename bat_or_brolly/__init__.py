@@ -6,11 +6,13 @@ from wtforms import Form, StringField, validators
 #Adding comment to test GH Actions
 class WeatherForm(Form):
     location = StringField('Location', [validators.Length(min=1)])
+    
 
 
 # Weather Functions
-def get_weather(coordinates):
-    """Get weather from Open-Meteo API using co-ordinates stored in a dict"""
+def get_weather(coordinates, date_str, time_str):
+    """Get weather from Open-Meteo API using co-ordinates stored in a dict,
+    at the user's chosen date and time."""
     latitude = coordinates['lat']
     longitude = coordinates["long"]
 
@@ -23,7 +25,22 @@ def get_weather(coordinates):
 
     forecast_response = requests.get(weather_url)
     forecast_content = forecast_response.json()
-    return forecast_content
+
+    # Build the target datetime string to match Open-Meteo's format
+    # e.g. "2026-05-13T14:00"
+    target = f"{date_str}T{time_str}"
+    times = forecast_content['hourly']['time']
+
+    if target not in times:
+        return None  # date/time outside the 7 day forecast window
+
+    index = times.index(target)
+
+    return {
+        'temperature': forecast_content['hourly']['temperature_2m'][index],
+        'rainfall':    forecast_content['hourly']['precipitation_probability'][index],
+        'wind':        forecast_content['hourly']['wind_speed_10m'][index]
+    }
 
 def select_date(chosen_date):
     """Select a date to get a specific weather reading of the user's choice"""
@@ -92,14 +109,18 @@ def create_app(test_config=None):
         if location_name:
             location_name = location_name.title()
             coordinates = get_location(location_name)
-            # add get date/time function
+            date_str = request.args.get('start-date')
+            time_str = request.args.get('start-time')
+    
             if coordinates:
-                weather_data = get_weather(coordinates)
-                # Time set at 14:00 of the current day for Weather Statistics
-                temperature = weather_data['hourly']['temperature_2m'][14]
-                rainfall = weather_data['hourly']['precipitation_probability'][14]
-                wind = weather_data['hourly']['windspeed_10m'][14]
-                verdict = game_on(temperature, rainfall, wind)
+                weather_data = get_weather(coordinates, date_str, time_str)
+                if weather_data:
+                    temperature = weather_data['temperature']
+                    rainfall = weather_data['rainfall']
+                    wind = weather_data['wind']
+                    verdict = game_on(temperature, rainfall, wind)
+                else:
+                    location_error = True  # date/time outside forecast window
             else:
                 location_error = True
         return render_template('app.html', form=form,
