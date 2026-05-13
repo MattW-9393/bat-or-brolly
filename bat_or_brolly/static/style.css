@@ -1246,3 +1246,34 @@ footer {
   .about-links-section { padding: 2rem 1rem; }
   .disclaimer-banner { padding: 1rem; }
 }
+
+/* Force WTForms wrapper to behave in flex context */
+.search-field-group dl,
+.search-field-group dd {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  display: block;
+}
+
+.search-field-group dt { display: none; }
+
+.search-field-group input[type="text"] {
+  display: block;
+  width: 100%;
+  height: 3rem;
+  padding: 0 1rem;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 1rem;
+  color: var(--ink);
+  background: white;
+  border: 1.5px solid rgba(26,26,24,0.2);
+  border-radius: 2px;
+  outline: none;
+  transition: border-color 0.2s;
+  box-sizing: border-box;
+}
+
+.search-field-group input[type="text"]:focus {
+  border-color: var(--grass);
+}
