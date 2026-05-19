@@ -101,12 +101,9 @@ for this kind of app.
 
 ### Forecast Timing — 2pm GMT
 
-Rather than pulling the first available hourly value or using datetime.now(),
-the app specifically targets the 14:00 GMT forecast. This decision was driven
-by cricket domain knowledge: 14:00 is typically when 40-over matches begin,
-and the point up to which 50-over matches can be postponed. Anchoring the
-forecast to a meaningful match time makes the verdict significantly more
-useful than a generic current-conditions check.
+Users are able to select a time and date (in the next 7 days) to view weather. 
+This is done via using a form to get a date and time string; the date and time string is 
+concatenated and subsequently matched to the dictionary entry in the API response.
 
 ### Weather Variables — Temperature, Precipitation, Wind
 
@@ -152,7 +149,7 @@ I opted for 3 workers because the standard formula for worker count is (2 × CPU
 
 Fargate was chosen because, even though it is technically more costly in terms of compute, the operational overhead saved by not having to manage the underlying infrastructure (Fargate being serverless) justifies that cost. "Serverless wherever possible" is also something AWS actively encourages across the 6 pillars of their Well-Architected Framework.
 
-The Application Load Balancer provides a secure public-facing endpoint for all inbound internet traffic, with TLS termination and load balancing. Exposing the container directly would present a security risk, as it would be accessible to all HTTP traffic from anywhere on the internet. Using the ALB also meant that a separate reverse proxy such as NGINX was unnecessary, as TLS termination and routing are handled at the load balancer level. However, if the app were ever required to scale to handle higher traffic demands or more complex routing requirements, NGINX could be introduced.
+A Cloudflare Sideconatiner was deployed to provide TLS termination and due to the Tunnel not requiring any ports to be exposed, it meant that in terms of security I was no more exposed for not having an ALB. Exposing the container directly would present a security risk, as it would be accessible to all HTTP traffic from anywhere on the internet. However, if the app were ever required to scale to handle higher traffic demands or more complex routing requirements, NGINX and an ALB could be introduced.
 
 ### Terraform
 
