@@ -1,7 +1,7 @@
 # Bat or Brolly
 🏏 A cricket-focused weather verdict app 🏏
 
-Bat or Brolly answers the question every recreational cricketer asks on a Saturday morning: is it worth making the trip to the ground? Enter a UK location and the app fetches the 14:00 GMT forecast from Open-Meteo, runs it against cricket-specific weather thresholds, and returns a plain-English verdict — from *Excellent conditions* to *Game off*.
+Bat or Brolly answers the question every recreational cricketer asks on a Saturday morning: is it worth making the trip to the ground? Enter a UK location and date/time and the app retrieves the forecast from Open-Meteo, runs it against cricket-specific weather thresholds, and returns a plain-English verdict — from *Excellent conditions* to *Game off*.
 
 Built as a portfolio project to demonstrate full-stack Python development, containerisation, cloud infrastructure, and CI/CD — with production-appropriate architecture throughout.
 
