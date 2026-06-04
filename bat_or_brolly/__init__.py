@@ -20,7 +20,7 @@ def get_weather(coordinates, date_str, time_str):
     weather_url = (f'https://api.open-meteo.com/v1/'
                    f'forecast?latitude={latitude}'
                    f'&longitude={longitude}'
-                   f'&hourly=temperature_2m,precipitation_probability,windspeed_10m'
+                   f'&hourly=temperature_2m,precipitation_probability,wind_speed_10m'
                    f'&past_days=0'
                    f'&forecast_days=7')
 
@@ -41,7 +41,7 @@ def get_weather(coordinates, date_str, time_str):
     return {
         'temperature': forecast_content['hourly']['temperature_2m'][index],
         'rainfall':    forecast_content['hourly']['precipitation_probability'][index],
-        'wind':        forecast_content['hourly']['windspeed_10m'][index]
+        'wind':        forecast_content['hourly']['wind_speed_10m'][index]
     }
 
 
