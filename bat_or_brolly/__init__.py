@@ -7,7 +7,6 @@ from datetime import date, timedelta
 
 class WeatherForm(Form):
     location = StringField('Location', [validators.Length(min=1)])
-    
 
 
 # Weather Functions
@@ -38,8 +37,7 @@ def get_weather(coordinates, date_str, time_str):
 
     index = times.index(target)
 
-
-    return {
+    return{
         'temperature': forecast_content['hourly']['temperature_2m'][index],
         'rainfall':    forecast_content['hourly']['precipitation_probability'][index],
         'wind':        forecast_content['hourly']['wind_speed_10m'][index]
